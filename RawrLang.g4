@@ -1,6 +1,6 @@
 grammar RawrLang; 
 
-prog : 'programa' bloco  'fimprog'  
+prog : 'start:' bloco  'end'  
 	 ;
 
 bloco : (cmd)+
@@ -9,14 +9,14 @@ bloco : (cmd)+
 cmd	: cmdleitura | cmdescrita | cmdattrib
     ;
     
-cmdleitura : 'leia' AP ID FP SC
+cmdleitura : 'read' AP ID FP SC?
            ;
  
-cmdescrita : 'escreva' AP ID FP SC
+cmdescrita : 'write' AP ID FP SC?
            ;
  
 
-cmdattrib : ID ATTR expr SC
+cmdattrib : ID ATTR expr SC?
           ;
           
 expr : termo ( OP termo )*

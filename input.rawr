@@ -1,8 +1,8 @@
-programa
+start:
 
-	leia(a);
-	leia(b);
-	escreva(a);
-	escreva(b);
+	read(a);
+	read(b);
+	write(a);
+	write(b);
 
-fimprog;
+end;
