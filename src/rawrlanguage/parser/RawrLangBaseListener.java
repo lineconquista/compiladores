@@ -1,6 +1,13 @@
 // Generated from RawrLang.g4 by ANTLR 4.9.2
 package rawrlanguage.parser;
 
+	import datastructures.RawrSymbol;
+	import datastructures.RawrVariable;
+	import datastructures.RawrSymbolTable;
+	import exceptions.RawrSemanticException;
+	import java.util.ArrayList;
+
+
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -23,6 +30,42 @@ public class RawrLangBaseListener implements RawrLangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitProg(RawrLangParser.ProgContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDecl(RawrLangParser.DeclContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDecl(RawrLangParser.DeclContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDeclaravar(RawrLangParser.DeclaravarContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDeclaravar(RawrLangParser.DeclaravarContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterTipo(RawrLangParser.TipoContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitTipo(RawrLangParser.TipoContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

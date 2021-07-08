@@ -1,5 +1,12 @@
 // Generated from RawrLang.g4 by ANTLR 4.9.2
 package rawrlanguage.parser;
+
+	import datastructures.RawrSymbol;
+	import datastructures.RawrVariable;
+	import datastructures.RawrSymbolTable;
+	import exceptions.RawrSemanticException;
+	import java.util.ArrayList;
+
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -17,6 +24,36 @@ public interface RawrLangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitProg(RawrLangParser.ProgContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RawrLangParser#decl}.
+	 * @param ctx the parse tree
+	 */
+	void enterDecl(RawrLangParser.DeclContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RawrLangParser#decl}.
+	 * @param ctx the parse tree
+	 */
+	void exitDecl(RawrLangParser.DeclContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RawrLangParser#declaravar}.
+	 * @param ctx the parse tree
+	 */
+	void enterDeclaravar(RawrLangParser.DeclaravarContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RawrLangParser#declaravar}.
+	 * @param ctx the parse tree
+	 */
+	void exitDeclaravar(RawrLangParser.DeclaravarContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RawrLangParser#tipo}.
+	 * @param ctx the parse tree
+	 */
+	void enterTipo(RawrLangParser.TipoContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RawrLangParser#tipo}.
+	 * @param ctx the parse tree
+	 */
+	void exitTipo(RawrLangParser.TipoContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link RawrLangParser#bloco}.
 	 * @param ctx the parse tree

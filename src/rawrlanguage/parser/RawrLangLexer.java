@@ -1,5 +1,12 @@
 // Generated from RawrLang.g4 by ANTLR 4.9.2
 package rawrlanguage.parser;
+
+	import datastructures.RawrSymbol;
+	import datastructures.RawrVariable;
+	import datastructures.RawrSymbolTable;
+	import exceptions.RawrSemanticException;
+	import java.util.ArrayList;
+
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
@@ -17,8 +24,8 @@ public class RawrLangLexer extends Lexer {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, T__2=3, T__3=4, AP=5, FP=6, SC=7, OP=8, ATTR=9, ID=10, 
-		NUMBER=11, WS=12;
+		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, AP=7, FP=8, SC=9, OP=10, 
+		ATTR=11, VIR=12, ID=13, NUMBER=14, WS=15;
 	public static String[] channelNames = {
 		"DEFAULT_TOKEN_CHANNEL", "HIDDEN"
 	};
@@ -29,23 +36,23 @@ public class RawrLangLexer extends Lexer {
 
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"T__0", "T__1", "T__2", "T__3", "AP", "FP", "SC", "OP", "ATTR", "ID", 
-			"NUMBER", "WS"
+			"T__0", "T__1", "T__2", "T__3", "T__4", "T__5", "AP", "FP", "SC", "OP", 
+			"ATTR", "VIR", "ID", "NUMBER", "WS"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, "'start:'", "'end'", "'read'", "'write'", "'('", "')'", "';'", 
-			null, "'='"
+			null, "'start:'", "'end'", "'numero'", "'texto'", "'read'", "'write'", 
+			"'('", "')'", "';'", null, "'='", "','"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, null, null, null, null, "AP", "FP", "SC", "OP", "ATTR", "ID", "NUMBER", 
-			"WS"
+			null, null, null, null, null, null, null, "AP", "FP", "SC", "OP", "ATTR", 
+			"VIR", "ID", "NUMBER", "WS"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -83,6 +90,13 @@ public class RawrLangLexer extends Lexer {
 	}
 
 
+		private int _tipo;
+		private String _varName;
+		private String _varValue;
+		private RawrSymbolTable symbolTable = new RawrSymbolTable();
+		private RawrSymbol symbol;
+
+
 	public RawrLangLexer(CharStream input) {
 		super(input);
 		_interp = new LexerATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
@@ -107,28 +121,33 @@ public class RawrLangLexer extends Lexer {
 	public ATN getATN() { return _ATN; }
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\2\16S\b\1\4\2\t\2\4"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\2\21h\b\1\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
-		"\13\4\f\t\f\4\r\t\r\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\3\3\3\3\3\3\3\3\4\3"+
-		"\4\3\4\3\4\3\4\3\5\3\5\3\5\3\5\3\5\3\5\3\6\3\6\3\7\3\7\3\b\3\b\3\t\3\t"+
-		"\3\n\3\n\3\13\3\13\7\13>\n\13\f\13\16\13A\13\13\3\f\6\fD\n\f\r\f\16\f"+
-		"E\3\f\3\f\6\fJ\n\f\r\f\16\fK\5\fN\n\f\3\r\3\r\3\r\3\r\2\2\16\3\3\5\4\7"+
-		"\5\t\6\13\7\r\b\17\t\21\n\23\13\25\f\27\r\31\16\3\2\7\5\2,-//\61\61\3"+
-		"\2c|\5\2\62;C\\c|\3\2\62;\5\2\13\f\17\17\"\"\2V\2\3\3\2\2\2\2\5\3\2\2"+
-		"\2\2\7\3\2\2\2\2\t\3\2\2\2\2\13\3\2\2\2\2\r\3\2\2\2\2\17\3\2\2\2\2\21"+
-		"\3\2\2\2\2\23\3\2\2\2\2\25\3\2\2\2\2\27\3\2\2\2\2\31\3\2\2\2\3\33\3\2"+
-		"\2\2\5\"\3\2\2\2\7&\3\2\2\2\t+\3\2\2\2\13\61\3\2\2\2\r\63\3\2\2\2\17\65"+
-		"\3\2\2\2\21\67\3\2\2\2\239\3\2\2\2\25;\3\2\2\2\27C\3\2\2\2\31O\3\2\2\2"+
-		"\33\34\7u\2\2\34\35\7v\2\2\35\36\7c\2\2\36\37\7t\2\2\37 \7v\2\2 !\7<\2"+
-		"\2!\4\3\2\2\2\"#\7g\2\2#$\7p\2\2$%\7f\2\2%\6\3\2\2\2&\'\7t\2\2\'(\7g\2"+
-		"\2()\7c\2\2)*\7f\2\2*\b\3\2\2\2+,\7y\2\2,-\7t\2\2-.\7k\2\2./\7v\2\2/\60"+
-		"\7g\2\2\60\n\3\2\2\2\61\62\7*\2\2\62\f\3\2\2\2\63\64\7+\2\2\64\16\3\2"+
-		"\2\2\65\66\7=\2\2\66\20\3\2\2\2\678\t\2\2\28\22\3\2\2\29:\7?\2\2:\24\3"+
-		"\2\2\2;?\t\3\2\2<>\t\4\2\2=<\3\2\2\2>A\3\2\2\2?=\3\2\2\2?@\3\2\2\2@\26"+
-		"\3\2\2\2A?\3\2\2\2BD\t\5\2\2CB\3\2\2\2DE\3\2\2\2EC\3\2\2\2EF\3\2\2\2F"+
-		"M\3\2\2\2GI\7\60\2\2HJ\t\5\2\2IH\3\2\2\2JK\3\2\2\2KI\3\2\2\2KL\3\2\2\2"+
-		"LN\3\2\2\2MG\3\2\2\2MN\3\2\2\2N\30\3\2\2\2OP\t\6\2\2PQ\3\2\2\2QR\b\r\2"+
-		"\2R\32\3\2\2\2\b\2=?EKM\3\b\2\2";
+		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\3\2\3\2\3\2\3\2\3\2"+
+		"\3\2\3\2\3\3\3\3\3\3\3\3\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\5\3\5\3\5\3\5\3"+
+		"\5\3\5\3\6\3\6\3\6\3\6\3\6\3\7\3\7\3\7\3\7\3\7\3\7\3\b\3\b\3\t\3\t\3\n"+
+		"\3\n\3\13\3\13\3\f\3\f\3\r\3\r\3\16\3\16\7\16S\n\16\f\16\16\16V\13\16"+
+		"\3\17\6\17Y\n\17\r\17\16\17Z\3\17\3\17\6\17_\n\17\r\17\16\17`\5\17c\n"+
+		"\17\3\20\3\20\3\20\3\20\2\2\21\3\3\5\4\7\5\t\6\13\7\r\b\17\t\21\n\23\13"+
+		"\25\f\27\r\31\16\33\17\35\20\37\21\3\2\7\5\2,-//\61\61\3\2c|\5\2\62;C"+
+		"\\c|\3\2\62;\5\2\13\f\17\17\"\"\2k\2\3\3\2\2\2\2\5\3\2\2\2\2\7\3\2\2\2"+
+		"\2\t\3\2\2\2\2\13\3\2\2\2\2\r\3\2\2\2\2\17\3\2\2\2\2\21\3\2\2\2\2\23\3"+
+		"\2\2\2\2\25\3\2\2\2\2\27\3\2\2\2\2\31\3\2\2\2\2\33\3\2\2\2\2\35\3\2\2"+
+		"\2\2\37\3\2\2\2\3!\3\2\2\2\5(\3\2\2\2\7,\3\2\2\2\t\63\3\2\2\2\139\3\2"+
+		"\2\2\r>\3\2\2\2\17D\3\2\2\2\21F\3\2\2\2\23H\3\2\2\2\25J\3\2\2\2\27L\3"+
+		"\2\2\2\31N\3\2\2\2\33P\3\2\2\2\35X\3\2\2\2\37d\3\2\2\2!\"\7u\2\2\"#\7"+
+		"v\2\2#$\7c\2\2$%\7t\2\2%&\7v\2\2&\'\7<\2\2\'\4\3\2\2\2()\7g\2\2)*\7p\2"+
+		"\2*+\7f\2\2+\6\3\2\2\2,-\7p\2\2-.\7w\2\2./\7o\2\2/\60\7g\2\2\60\61\7t"+
+		"\2\2\61\62\7q\2\2\62\b\3\2\2\2\63\64\7v\2\2\64\65\7g\2\2\65\66\7z\2\2"+
+		"\66\67\7v\2\2\678\7q\2\28\n\3\2\2\29:\7t\2\2:;\7g\2\2;<\7c\2\2<=\7f\2"+
+		"\2=\f\3\2\2\2>?\7y\2\2?@\7t\2\2@A\7k\2\2AB\7v\2\2BC\7g\2\2C\16\3\2\2\2"+
+		"DE\7*\2\2E\20\3\2\2\2FG\7+\2\2G\22\3\2\2\2HI\7=\2\2I\24\3\2\2\2JK\t\2"+
+		"\2\2K\26\3\2\2\2LM\7?\2\2M\30\3\2\2\2NO\7.\2\2O\32\3\2\2\2PT\t\3\2\2Q"+
+		"S\t\4\2\2RQ\3\2\2\2SV\3\2\2\2TR\3\2\2\2TU\3\2\2\2U\34\3\2\2\2VT\3\2\2"+
+		"\2WY\t\5\2\2XW\3\2\2\2YZ\3\2\2\2ZX\3\2\2\2Z[\3\2\2\2[b\3\2\2\2\\^\7\60"+
+		"\2\2]_\t\5\2\2^]\3\2\2\2_`\3\2\2\2`^\3\2\2\2`a\3\2\2\2ac\3\2\2\2b\\\3"+
+		"\2\2\2bc\3\2\2\2c\36\3\2\2\2de\t\6\2\2ef\3\2\2\2fg\b\20\2\2g \3\2\2\2"+
+		"\b\2RTZ`b\3\b\2\2";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

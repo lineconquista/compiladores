@@ -1,8 +1,11 @@
 start:
 
+	numero a, b;
+	texto t1;
 	read(a);
 	read(b);
+	a = 1 + 2 * 3/b
 	write(a);
 	write(b);
-
+   
 end;
