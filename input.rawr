@@ -4,8 +4,9 @@ start:
 	texto t1;
 	read(a);
 	read(b);
-	a = 1 + 2 * 3/b
 	write(a);
+	a = 1 + 2 * 3/bp
+
 	write(b);
    
 end;

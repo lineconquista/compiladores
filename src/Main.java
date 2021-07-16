@@ -1,4 +1,6 @@
 import org.antlr.v4.runtime.CommonTokenStream;
+
+import exceptions.RawrSemanticException;
 import rawrlanguage.parser.RawrLangLexer;
 import rawrlanguage.parser.RawrLangParser;
 import org.antlr.v4.runtime.*;
@@ -17,8 +19,11 @@ public class Main {
 			parser = new RawrLangParser(tokenStream);
 			parser.prog();
 			System.out.print("compilado!!!");
+		
+		}catch(RawrSemanticException ex){
+			System.err.print("Semantic error: "+ex.getMessage());
 		}catch(Exception ex){
-			System.out.print("errooo: "+ex.getMessage());
+			System.err.print("errooo: "+ex.getMessage());
 		}
 
 	}

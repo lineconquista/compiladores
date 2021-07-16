@@ -13,6 +13,13 @@ grammar RawrLang;
 	private String _varValue;
 	private RawrSymbolTable symbolTable = new RawrSymbolTable();
 	private RawrSymbol symbol;
+	
+	public void variableValidate(String id){
+	
+			if (!symbolTable.exists(id)){
+				throw new RawrSemanticException ("Symbol "+id+" not declared");
+			}
+	}
 }
 
 prog : 'start:' decl bloco  'end'  
@@ -25,15 +32,22 @@ declaravar : tipo ID {
 			_varName = _input.LT(-1).getText();
 			_varValue = null;
 			symbol = new RawrVariable(_varName, _tipo, _varValue);
-			System.out.println("simbolo adicionado " + symbol);
-			symbolTable.add(symbol);
+			if(!symbolTable.exists(_varName)){
+				symbolTable.add(symbol);
+			} else {
+				throw new RawrSemanticException("Symbol already declared");
 			}
+		}
 		(VIR ID{
 			_varName = _input.LT(-1).getText();
 			_varValue = null;
 			symbol = new RawrVariable(_varName, _tipo,  _varValue);
-			System.out.println("simbolo adicionado " + symbol);
-			symbolTable.add(symbol);
+			
+			if(!symbolTable.exists(_varName)){
+				symbolTable.add(symbol);
+			} else {
+				throw new RawrSemanticException("Symbol already declared");
+			}
 			})* SC?;
 
 tipo	: 'numero' {_tipo = RawrVariable.NUMBER;}
@@ -43,28 +57,35 @@ tipo	: 'numero' {_tipo = RawrVariable.NUMBER;}
 bloco : (cmd)+
       ;
 
-cmd	: cmdleitura {System.out.println("Comando de leitura");}
-	| cmdescrita {System.out.println("Comando de escrita");}
-	| cmdattrib {System.out.println("Comando de atribuicao");}
+cmd	: cmdleitura 
+	| cmdescrita 
+	| cmdattrib 
     ;
     
 cmdleitura : 'read' AP 
-					ID {System.out.println("ID="+_input.LT(-1).getText());}
+					ID {variableValidate(_input.LT(-1).getText());}
 					FP 
 					SC?
            ;
  
-cmdescrita : 'write' AP ID FP SC?
+cmdescrita : 'write' AP 
+					 ID {variableValidate(_input.LT(-1).getText());}
+					 FP 
+					 SC?
            ;
  
 
-cmdattrib : ID ATTR expr SC?
+cmdattrib : ID {variableValidate(_input.LT(-1).getText());} 
+			ATTR 
+			expr 
+			SC?
           ;
           
 expr : termo ( OP termo )*
 	 ;
 	 
-termo: ID | NUMBER
+termo:  ID {variableValidate(_input.LT(-1).getText());} 
+		| NUMBER
      ;
      
 AP: '('

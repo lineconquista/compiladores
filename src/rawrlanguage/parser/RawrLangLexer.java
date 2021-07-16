@@ -95,6 +95,13 @@ public class RawrLangLexer extends Lexer {
 		private String _varValue;
 		private RawrSymbolTable symbolTable = new RawrSymbolTable();
 		private RawrSymbol symbol;
+		
+		public void variableValidate(String id){
+		
+				if (!symbolTable.exists(id)){
+					throw new RawrSemanticException ("Symbol "+id+" not declared");
+				}
+		}
 
 
 	public RawrLangLexer(CharStream input) {

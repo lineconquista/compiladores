@@ -103,6 +103,13 @@ public class RawrLangParser extends Parser {
 		private String _varValue;
 		private RawrSymbolTable symbolTable = new RawrSymbolTable();
 		private RawrSymbol symbol;
+		
+		public void variableValidate(String id){
+		
+				if (!symbolTable.exists(id)){
+					throw new RawrSemanticException ("Symbol "+id+" not declared");
+				}
+		}
 
 	public RawrLangParser(TokenStream input) {
 		super(input);
@@ -254,9 +261,12 @@ public class RawrLangParser extends Parser {
 						_varName = _input.LT(-1).getText();
 						_varValue = null;
 						symbol = new RawrVariable(_varName, _tipo, _varValue);
-						System.out.println("simbolo adicionado " + symbol);
-						symbolTable.add(symbol);
-						
+						if(!symbolTable.exists(_varName)){
+							symbolTable.add(symbol);
+						} else {
+							throw new RawrSemanticException("Symbol already declared");
+						}
+					
 			setState(40);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -271,8 +281,12 @@ public class RawrLangParser extends Parser {
 							_varName = _input.LT(-1).getText();
 							_varValue = null;
 							symbol = new RawrVariable(_varName, _tipo,  _varValue);
-							System.out.println("simbolo adicionado " + symbol);
-							symbolTable.add(symbol);
+							
+							if(!symbolTable.exists(_varName)){
+								symbolTable.add(symbol);
+							} else {
+								throw new RawrSemanticException("Symbol already declared");
+							}
 							
 				}
 				}
@@ -439,7 +453,7 @@ public class RawrLangParser extends Parser {
 		CmdContext _localctx = new CmdContext(_ctx, getState());
 		enterRule(_localctx, 10, RULE_cmd);
 		try {
-			setState(66);
+			setState(60);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case T__4:
@@ -447,23 +461,20 @@ public class RawrLangParser extends Parser {
 				{
 				setState(57);
 				cmdleitura();
-				System.out.println("Comando de leitura");
 				}
 				break;
 			case T__5:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(60);
+				setState(58);
 				cmdescrita();
-				System.out.println("Comando de escrita");
 				}
 				break;
 			case ID:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(63);
+				setState(59);
 				cmdattrib();
-				System.out.println("Comando de atribuicao");
 				}
 				break;
 			default:
@@ -507,21 +518,21 @@ public class RawrLangParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(68);
+			setState(62);
 			match(T__4);
-			setState(69);
+			setState(63);
 			match(AP);
-			setState(70);
+			setState(64);
 			match(ID);
-			System.out.println("ID="+_input.LT(-1).getText());
-			setState(72);
+			variableValidate(_input.LT(-1).getText());
+			setState(66);
 			match(FP);
-			setState(74);
+			setState(68);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==SC) {
 				{
-				setState(73);
+				setState(67);
 				match(SC);
 				}
 			}
@@ -565,20 +576,21 @@ public class RawrLangParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(76);
+			setState(70);
 			match(T__5);
-			setState(77);
+			setState(71);
 			match(AP);
-			setState(78);
+			setState(72);
 			match(ID);
-			setState(79);
+			variableValidate(_input.LT(-1).getText());
+			setState(74);
 			match(FP);
-			setState(81);
+			setState(76);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==SC) {
 				{
-				setState(80);
+				setState(75);
 				match(SC);
 				}
 			}
@@ -624,18 +636,19 @@ public class RawrLangParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(83);
+			setState(78);
 			match(ID);
-			setState(84);
+			variableValidate(_input.LT(-1).getText());
+			setState(80);
 			match(ATTR);
-			setState(85);
+			setState(81);
 			expr();
-			setState(87);
+			setState(83);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==SC) {
 				{
-				setState(86);
+				setState(82);
 				match(SC);
 				}
 			}
@@ -685,21 +698,21 @@ public class RawrLangParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(89);
+			setState(85);
 			termo();
-			setState(94);
+			setState(90);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==OP) {
 				{
 				{
-				setState(90);
+				setState(86);
 				match(OP);
-				setState(91);
+				setState(87);
 				termo();
 				}
 				}
-				setState(96);
+				setState(92);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -736,20 +749,27 @@ public class RawrLangParser extends Parser {
 	public final TermoContext termo() throws RecognitionException {
 		TermoContext _localctx = new TermoContext(_ctx, getState());
 		enterRule(_localctx, 20, RULE_termo);
-		int _la;
 		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(97);
-			_la = _input.LA(1);
-			if ( !(_la==ID || _la==NUMBER) ) {
-			_errHandler.recoverInline(this);
-			}
-			else {
-				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
-				_errHandler.reportMatch(this);
-				consume();
-			}
+			setState(96);
+			_errHandler.sync(this);
+			switch (_input.LA(1)) {
+			case ID:
+				enterOuterAlt(_localctx, 1);
+				{
+				setState(93);
+				match(ID);
+				variableValidate(_input.LT(-1).getText());
+				}
+				break;
+			case NUMBER:
+				enterOuterAlt(_localctx, 2);
+				{
+				setState(95);
+				match(NUMBER);
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
 			}
 		}
 		catch (RecognitionException re) {
@@ -764,31 +784,30 @@ public class RawrLangParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\21f\4\2\t\2\4\3\t"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\21e\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4"+
 		"\f\t\f\3\2\3\2\3\2\3\2\3\2\3\3\6\3\37\n\3\r\3\16\3 \3\4\3\4\3\4\3\4\3"+
 		"\4\3\4\7\4)\n\4\f\4\16\4,\13\4\3\4\5\4/\n\4\3\5\3\5\3\5\3\5\5\5\65\n\5"+
-		"\3\6\6\68\n\6\r\6\16\69\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\5\7E\n\7\3"+
-		"\b\3\b\3\b\3\b\3\b\3\b\5\bM\n\b\3\t\3\t\3\t\3\t\3\t\5\tT\n\t\3\n\3\n\3"+
-		"\n\3\n\5\nZ\n\n\3\13\3\13\3\13\7\13_\n\13\f\13\16\13b\13\13\3\f\3\f\3"+
-		"\f\2\2\r\2\4\6\b\n\f\16\20\22\24\26\2\3\3\2\17\20\2e\2\30\3\2\2\2\4\36"+
-		"\3\2\2\2\6\"\3\2\2\2\b\64\3\2\2\2\n\67\3\2\2\2\fD\3\2\2\2\16F\3\2\2\2"+
-		"\20N\3\2\2\2\22U\3\2\2\2\24[\3\2\2\2\26c\3\2\2\2\30\31\7\3\2\2\31\32\5"+
-		"\4\3\2\32\33\5\n\6\2\33\34\7\4\2\2\34\3\3\2\2\2\35\37\5\6\4\2\36\35\3"+
-		"\2\2\2\37 \3\2\2\2 \36\3\2\2\2 !\3\2\2\2!\5\3\2\2\2\"#\5\b\5\2#$\7\17"+
-		"\2\2$*\b\4\1\2%&\7\16\2\2&\'\7\17\2\2\')\b\4\1\2(%\3\2\2\2),\3\2\2\2*"+
-		"(\3\2\2\2*+\3\2\2\2+.\3\2\2\2,*\3\2\2\2-/\7\13\2\2.-\3\2\2\2./\3\2\2\2"+
-		"/\7\3\2\2\2\60\61\7\5\2\2\61\65\b\5\1\2\62\63\7\6\2\2\63\65\b\5\1\2\64"+
-		"\60\3\2\2\2\64\62\3\2\2\2\65\t\3\2\2\2\668\5\f\7\2\67\66\3\2\2\289\3\2"+
-		"\2\29\67\3\2\2\29:\3\2\2\2:\13\3\2\2\2;<\5\16\b\2<=\b\7\1\2=E\3\2\2\2"+
-		">?\5\20\t\2?@\b\7\1\2@E\3\2\2\2AB\5\22\n\2BC\b\7\1\2CE\3\2\2\2D;\3\2\2"+
-		"\2D>\3\2\2\2DA\3\2\2\2E\r\3\2\2\2FG\7\7\2\2GH\7\t\2\2HI\7\17\2\2IJ\b\b"+
-		"\1\2JL\7\n\2\2KM\7\13\2\2LK\3\2\2\2LM\3\2\2\2M\17\3\2\2\2NO\7\b\2\2OP"+
-		"\7\t\2\2PQ\7\17\2\2QS\7\n\2\2RT\7\13\2\2SR\3\2\2\2ST\3\2\2\2T\21\3\2\2"+
-		"\2UV\7\17\2\2VW\7\r\2\2WY\5\24\13\2XZ\7\13\2\2YX\3\2\2\2YZ\3\2\2\2Z\23"+
-		"\3\2\2\2[`\5\26\f\2\\]\7\f\2\2]_\5\26\f\2^\\\3\2\2\2_b\3\2\2\2`^\3\2\2"+
-		"\2`a\3\2\2\2a\25\3\2\2\2b`\3\2\2\2cd\t\2\2\2d\27\3\2\2\2\f *.\649DLSY"+
-		"`";
+		"\3\6\6\68\n\6\r\6\16\69\3\7\3\7\3\7\5\7?\n\7\3\b\3\b\3\b\3\b\3\b\3\b\5"+
+		"\bG\n\b\3\t\3\t\3\t\3\t\3\t\3\t\5\tO\n\t\3\n\3\n\3\n\3\n\3\n\5\nV\n\n"+
+		"\3\13\3\13\3\13\7\13[\n\13\f\13\16\13^\13\13\3\f\3\f\3\f\5\fc\n\f\3\f"+
+		"\2\2\r\2\4\6\b\n\f\16\20\22\24\26\2\2\2e\2\30\3\2\2\2\4\36\3\2\2\2\6\""+
+		"\3\2\2\2\b\64\3\2\2\2\n\67\3\2\2\2\f>\3\2\2\2\16@\3\2\2\2\20H\3\2\2\2"+
+		"\22P\3\2\2\2\24W\3\2\2\2\26b\3\2\2\2\30\31\7\3\2\2\31\32\5\4\3\2\32\33"+
+		"\5\n\6\2\33\34\7\4\2\2\34\3\3\2\2\2\35\37\5\6\4\2\36\35\3\2\2\2\37 \3"+
+		"\2\2\2 \36\3\2\2\2 !\3\2\2\2!\5\3\2\2\2\"#\5\b\5\2#$\7\17\2\2$*\b\4\1"+
+		"\2%&\7\16\2\2&\'\7\17\2\2\')\b\4\1\2(%\3\2\2\2),\3\2\2\2*(\3\2\2\2*+\3"+
+		"\2\2\2+.\3\2\2\2,*\3\2\2\2-/\7\13\2\2.-\3\2\2\2./\3\2\2\2/\7\3\2\2\2\60"+
+		"\61\7\5\2\2\61\65\b\5\1\2\62\63\7\6\2\2\63\65\b\5\1\2\64\60\3\2\2\2\64"+
+		"\62\3\2\2\2\65\t\3\2\2\2\668\5\f\7\2\67\66\3\2\2\289\3\2\2\29\67\3\2\2"+
+		"\29:\3\2\2\2:\13\3\2\2\2;?\5\16\b\2<?\5\20\t\2=?\5\22\n\2>;\3\2\2\2><"+
+		"\3\2\2\2>=\3\2\2\2?\r\3\2\2\2@A\7\7\2\2AB\7\t\2\2BC\7\17\2\2CD\b\b\1\2"+
+		"DF\7\n\2\2EG\7\13\2\2FE\3\2\2\2FG\3\2\2\2G\17\3\2\2\2HI\7\b\2\2IJ\7\t"+
+		"\2\2JK\7\17\2\2KL\b\t\1\2LN\7\n\2\2MO\7\13\2\2NM\3\2\2\2NO\3\2\2\2O\21"+
+		"\3\2\2\2PQ\7\17\2\2QR\b\n\1\2RS\7\r\2\2SU\5\24\13\2TV\7\13\2\2UT\3\2\2"+
+		"\2UV\3\2\2\2V\23\3\2\2\2W\\\5\26\f\2XY\7\f\2\2Y[\5\26\f\2ZX\3\2\2\2[^"+
+		"\3\2\2\2\\Z\3\2\2\2\\]\3\2\2\2]\25\3\2\2\2^\\\3\2\2\2_`\7\17\2\2`c\b\f"+
+		"\1\2ac\7\20\2\2b_\3\2\2\2ba\3\2\2\2c\27\3\2\2\2\r *.\649>FNU\\b";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
