@@ -17,7 +17,7 @@ grammar RawrLang;
 	public void variableValidate(String id){
 	
 			if (!symbolTable.exists(id)){
-				throw new RawrSemanticException ("Symbol "+id+" not declared");
+				throw new RawrSemanticException ("Variable "+id+" not declared");
 			}
 	}
 }
@@ -35,7 +35,7 @@ declaravar : tipo ID {
 			if(!symbolTable.exists(_varName)){
 				symbolTable.add(symbol);
 			} else {
-				throw new RawrSemanticException("Symbol already declared");
+				throw new RawrSemanticException("Variable "+ symbol + " already declared");
 			}
 		}
 		(VIR ID{
@@ -46,7 +46,7 @@ declaravar : tipo ID {
 			if(!symbolTable.exists(_varName)){
 				symbolTable.add(symbol);
 			} else {
-				throw new RawrSemanticException("Symbol already declared");
+				throw new RawrSemanticException("Variable "+ symbol + " already declared");
 			}
 			})* SC?;
 
@@ -60,6 +60,7 @@ bloco : (cmd)+
 cmd	: cmdleitura 
 	| cmdescrita 
 	| cmdattrib 
+	| cmdselecao
     ;
     
 cmdleitura : 'read' AP 
@@ -80,6 +81,10 @@ cmdattrib : ID {variableValidate(_input.LT(-1).getText());}
 			expr 
 			SC?
           ;
+          
+cmdselecao : 'se' AP ID OPREL (ID | NUMBER) FP ACH (cmd)+ FCH
+		   	 ('senao' ACH (cmd+) FCH)?
+		   ;
           
 expr : termo ( OP termo )*
 	 ;
@@ -103,6 +108,15 @@ OP : '+' | '-' | '*' | '/'
 ATTR : '='
      ;
      
+ACH : '{'
+	;
+	
+FCH : '}'
+	;
+     
+OPREL: '>' | '<' | '>=' | '<=' | '==' | '!='
+	 ;
+	 
 VIR: ','
    ;
      

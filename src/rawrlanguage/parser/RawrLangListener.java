@@ -105,6 +105,16 @@ public interface RawrLangListener extends ParseTreeListener {
 	 */
 	void exitCmdattrib(RawrLangParser.CmdattribContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link RawrLangParser#cmdselecao}.
+	 * @param ctx the parse tree
+	 */
+	void enterCmdselecao(RawrLangParser.CmdselecaoContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RawrLangParser#cmdselecao}.
+	 * @param ctx the parse tree
+	 */
+	void exitCmdselecao(RawrLangParser.CmdselecaoContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link RawrLangParser#expr}.
 	 * @param ctx the parse tree
 	 */

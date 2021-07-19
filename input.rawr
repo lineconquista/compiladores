@@ -5,8 +5,16 @@ start:
 	read(a);
 	read(b);
 	write(a);
-	a = 1 + 2 * 3/bp
+	t1 = 2
+	a = 1 + 2 * 3
+	
+	se ( t1 == 1 ) {
+		write(t1)
+	}
+	senao {
+		read(a)
+	}
 
-	write(b);
+	write(a);
    
 end;
