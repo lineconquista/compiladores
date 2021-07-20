@@ -19,7 +19,8 @@ public class Main {
 			parser = new RawrLangParser(tokenStream);
 			parser.prog();
 			System.out.print("compilado!!!");
-		
+			parser.exibeComandos();
+			
 		}catch(RawrSemanticException ex){
 			System.err.print("Semantic error: "+ex.getMessage());
 		}catch(Exception ex){

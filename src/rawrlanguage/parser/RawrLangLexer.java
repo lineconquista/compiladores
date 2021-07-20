@@ -6,6 +6,10 @@ package rawrlanguage.parser;
 	import datastructures.RawrSymbolTable;
 	import exceptions.RawrSemanticException;
 	import java.util.ArrayList;
+	import ast.AbstractCommand;
+	import ast.RawrProgram;
+	import ast.CommandLeitura;
+	import ast.CommandEscrita;
 
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
@@ -98,12 +102,22 @@ public class RawrLangLexer extends Lexer {
 		private String _varValue;
 		private RawrSymbolTable symbolTable = new RawrSymbolTable();
 		private RawrSymbol symbol;
+		private RawrProgram program = new RawrProgram();
+		private ArrayList <AbstractCommand> curThread = new ArrayList<AbstractCommand>();
+		private String _readId;
+		private String _writeId;
 		
 		public void variableValidate(String id){
 		
 				if (!symbolTable.exists(id)){
 					throw new RawrSemanticException ("Variable "+id+" not declared");
 				}
+		}
+		
+		public void exibeComandos(){
+			for(AbstractCommand c: program.getComandos()){
+				System.out.println(c);
+			}
 		}
 
 

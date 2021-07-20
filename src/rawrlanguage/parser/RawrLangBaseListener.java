@@ -6,6 +6,10 @@ package rawrlanguage.parser;
 	import datastructures.RawrSymbolTable;
 	import exceptions.RawrSemanticException;
 	import java.util.ArrayList;
+	import ast.AbstractCommand;
+	import ast.RawrProgram;
+	import ast.CommandLeitura;
+	import ast.CommandEscrita;
 
 
 import org.antlr.v4.runtime.ParserRuleContext;

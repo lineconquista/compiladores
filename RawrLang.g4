@@ -5,6 +5,10 @@ grammar RawrLang;
 	import datastructures.RawrSymbolTable;
 	import exceptions.RawrSemanticException;
 	import java.util.ArrayList;
+	import ast.AbstractCommand;
+	import ast.RawrProgram;
+	import ast.CommandLeitura;
+	import ast.CommandEscrita;
 }
 
 @members{
@@ -13,6 +17,10 @@ grammar RawrLang;
 	private String _varValue;
 	private RawrSymbolTable symbolTable = new RawrSymbolTable();
 	private RawrSymbol symbol;
+	private RawrProgram program = new RawrProgram();
+	private ArrayList <AbstractCommand> curThread = new ArrayList<AbstractCommand>();
+	private String _readId;
+	private String _writeId;
 	
 	public void variableValidate(String id){
 	
@@ -20,9 +28,16 @@ grammar RawrLang;
 				throw new RawrSemanticException ("Variable "+id+" not declared");
 			}
 	}
+	
+	public void exibeComandos(){
+		for(AbstractCommand c: program.getComandos()){
+			System.out.println(c);
+		}
+	}
 }
 
 prog : 'start:' decl bloco  'end'  
+		{program.setComandos(curThread);}
 	 ;
 
 decl: (declaravar)+
@@ -64,15 +79,27 @@ cmd	: cmdleitura
     ;
     
 cmdleitura : 'read' AP 
-					ID {variableValidate(_input.LT(-1).getText());}
+					ID {variableValidate(_input.LT(-1).getText());
+						_readId = _input.LT(-1).getText();
+						}
 					FP 
 					SC?
+			 {
+			 	CommandLeitura cmd = new CommandLeitura(_readId);
+				curThread.add(cmd);
+			 }
            ;
  
 cmdescrita : 'write' AP 
-					 ID {variableValidate(_input.LT(-1).getText());}
+					 ID {variableValidate(_input.LT(-1).getText());
+					 	_writeId = _input.LT(-1).getText();
+					 	}
 					 FP 
 					 SC?
+			{
+			 	CommandEscrita cmd = new CommandEscrita(_writeId);
+				curThread.add(cmd);
+			 }
            ;
  
 
