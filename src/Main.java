@@ -18,8 +18,7 @@ public class Main {
 			CommonTokenStream tokenStream = new CommonTokenStream(lexer);
 			parser = new RawrLangParser(tokenStream);
 			parser.prog();
-			System.out.print("compilado!!!");
-			parser.exibeComandos();
+			System.out.print("Sucessfull compilation :)");
 			parser.generateCode();
 			
 		}catch(RawrSemanticException ex){

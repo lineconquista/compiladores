@@ -9,10 +9,10 @@ package rawrlanguage.parser;
 	import java.util.Stack;
 	import ast.AbstractCommand;
 	import ast.RawrProgram;
-	import ast.CommandLeitura;
-	import ast.CommandEscrita;
-	import ast.CommandAtribuicao;
-	import ast.CommandDecisao;
+	import ast.CommandRead;
+	import ast.CommandWrite;
+	import ast.CommandAttrib;
+	import ast.CommandConditional;
 
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -35,21 +35,21 @@ public class RawrLangParser extends Parser {
 		FP=10, SC=11, OP=12, ATTR=13, ACH=14, FCH=15, OPREL=16, VIR=17, ID=18, 
 		NUMBER=19, WS=20;
 	public static final int
-		RULE_prog = 0, RULE_decl = 1, RULE_declaravar = 2, RULE_tipo = 3, RULE_bloco = 4, 
-		RULE_cmd = 5, RULE_cmdleitura = 6, RULE_cmdescrita = 7, RULE_cmdattrib = 8, 
-		RULE_cmdselecao = 9, RULE_expr = 10, RULE_termo = 11;
+		RULE_prog = 0, RULE_decl = 1, RULE_decl_var = 2, RULE_type = 3, RULE_code = 4, 
+		RULE_cmd = 5, RULE_cmd_read = 6, RULE_cmd_write = 7, RULE_cmd_attrib = 8, 
+		RULE_cmd_conditional = 9, RULE_expr = 10, RULE_term = 11;
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"prog", "decl", "declaravar", "tipo", "bloco", "cmd", "cmdleitura", "cmdescrita", 
-			"cmdattrib", "cmdselecao", "expr", "termo"
+			"prog", "decl", "decl_var", "type", "code", "cmd", "cmd_read", "cmd_write", 
+			"cmd_attrib", "cmd_conditional", "expr", "term"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, "'start:'", "'end'", "'numero'", "'texto'", "'read'", "'write'", 
-			"'se'", "'senao'", "'('", "')'", "';'", null, "'='", "'{'", "'}'", null, 
+			null, "'start:'", "'end'", "'number'", "'text'", "'read'", "'write'", 
+			"'if'", "'else'", "'('", "')'", "';'", null, "'='", "'{'", "'}'", null, 
 			"','"
 		};
 	}
@@ -107,31 +107,32 @@ public class RawrLangParser extends Parser {
 	public ATN getATN() { return _ATN; }
 
 
-		private int _tipo;
+		
+		private int _type;
 		private String _varName;
 		private String _varValue;
-		private RawrSymbolTable symbolTable = new RawrSymbolTable();
-		private RawrSymbol symbol;
-		private RawrProgram program = new RawrProgram();
-		private ArrayList <AbstractCommand> curThread;
 		private String _readId;
 		private String _writeId;
 		private String _exprId;
 		private String _exprContent;
 		private String _exprDecision;
+		private RawrSymbolTable symbolTable = new RawrSymbolTable();
+		private RawrSymbol symbol;
+		private RawrProgram program = new RawrProgram();
+		private ArrayList <AbstractCommand> curThread;
+		private ArrayList<AbstractCommand> listTrue;
+		private ArrayList<AbstractCommand> listFalse;
 		private Stack<ArrayList<AbstractCommand>> stack = new Stack <ArrayList<AbstractCommand>>();
-		private ArrayList<AbstractCommand> listaTrue;
-		private ArrayList<AbstractCommand> listaFalse;
+
 		
 		public void variableValidate(String id){
-		
-				if (!symbolTable.exists(id)){
-					throw new RawrSemanticException ("Variable "+id+" not declared");
-				}
+			if (!symbolTable.exists(id)){
+				throw new RawrSemanticException ("Variable "+id+" not declared");
+			}
 		}
 		
 		public void exibeComandos(){
-			for(AbstractCommand c: program.getComandos()){
+			for(AbstractCommand c: program.getCommands()){
 				System.out.println(c);
 			}
 		}
@@ -139,6 +140,7 @@ public class RawrLangParser extends Parser {
 		public void generateCode(){
 			program.generateTarget();
 		}
+		
 
 	public RawrLangParser(TokenStream input) {
 		super(input);
@@ -149,8 +151,8 @@ public class RawrLangParser extends Parser {
 		public DeclContext decl() {
 			return getRuleContext(DeclContext.class,0);
 		}
-		public BlocoContext bloco() {
-			return getRuleContext(BlocoContext.class,0);
+		public CodeContext code() {
+			return getRuleContext(CodeContext.class,0);
 		}
 		public ProgContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -177,12 +179,13 @@ public class RawrLangParser extends Parser {
 			setState(25);
 			decl();
 			setState(26);
-			bloco();
+			code();
 			setState(27);
 			match(T__1);
-				program.setVarTable(symbolTable);
-						program.setComandos(stack.pop());
-					 
+				
+						program.setVarTable(symbolTable);
+						program.setCommands(stack.pop());
+					
 			}
 		}
 		catch (RecognitionException re) {
@@ -197,11 +200,11 @@ public class RawrLangParser extends Parser {
 	}
 
 	public static class DeclContext extends ParserRuleContext {
-		public List<DeclaravarContext> declaravar() {
-			return getRuleContexts(DeclaravarContext.class);
+		public List<Decl_varContext> decl_var() {
+			return getRuleContexts(Decl_varContext.class);
 		}
-		public DeclaravarContext declaravar(int i) {
-			return getRuleContext(DeclaravarContext.class,i);
+		public Decl_varContext decl_var(int i) {
+			return getRuleContext(Decl_varContext.class,i);
 		}
 		public DeclContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -231,7 +234,7 @@ public class RawrLangParser extends Parser {
 				{
 				{
 				setState(30);
-				declaravar();
+				decl_var();
 				}
 				}
 				setState(33); 
@@ -251,9 +254,9 @@ public class RawrLangParser extends Parser {
 		return _localctx;
 	}
 
-	public static class DeclaravarContext extends ParserRuleContext {
-		public TipoContext tipo() {
-			return getRuleContext(TipoContext.class,0);
+	public static class Decl_varContext extends ParserRuleContext {
+		public TypeContext type() {
+			return getRuleContext(TypeContext.class,0);
 		}
 		public List<TerminalNode> ID() { return getTokens(RawrLangParser.ID); }
 		public TerminalNode ID(int i) {
@@ -264,41 +267,43 @@ public class RawrLangParser extends Parser {
 			return getToken(RawrLangParser.VIR, i);
 		}
 		public TerminalNode SC() { return getToken(RawrLangParser.SC, 0); }
-		public DeclaravarContext(ParserRuleContext parent, int invokingState) {
+		public Decl_varContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_declaravar; }
+		@Override public int getRuleIndex() { return RULE_decl_var; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).enterDeclaravar(this);
+			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).enterDecl_var(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).exitDeclaravar(this);
+			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).exitDecl_var(this);
 		}
 	}
 
-	public final DeclaravarContext declaravar() throws RecognitionException {
-		DeclaravarContext _localctx = new DeclaravarContext(_ctx, getState());
-		enterRule(_localctx, 4, RULE_declaravar);
+	public final Decl_varContext decl_var() throws RecognitionException {
+		Decl_varContext _localctx = new Decl_varContext(_ctx, getState());
+		enterRule(_localctx, 4, RULE_decl_var);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(35);
-			tipo();
+			type();
 			setState(36);
 			match(ID);
 
-						_varName = _input.LT(-1).getText();
-						_varValue = null;
-						symbol = new RawrVariable(_varName, _tipo, _varValue);
-						if(!symbolTable.exists(_varName)){
-							symbolTable.add(symbol);
-						} else {
-							throw new RawrSemanticException("Variable "+ symbol + " already declared");
-						}
-					
+								_varName = _input.LT(-1).getText();
+								_varValue = null;
+								symbol = new RawrVariable(_varName, _type, _varValue);
+								
+								if(!symbolTable.exists(_varName)){
+									symbolTable.add(symbol);
+									
+								} else {
+									throw new RawrSemanticException("Variable "+ symbol + " already declared");
+								}
+					   		
 			setState(43);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -310,16 +315,17 @@ public class RawrLangParser extends Parser {
 				setState(39);
 				match(ID);
 
-							_varName = _input.LT(-1).getText();
-							_varValue = null;
-							symbol = new RawrVariable(_varName, _tipo,  _varValue);
-							
-							if(!symbolTable.exists(_varName)){
-								symbolTable.add(symbol);
-							} else {
-								throw new RawrSemanticException("Variable "+ symbol + " already declared");
-							}
-							
+										_varName = _input.LT(-1).getText();
+										_varValue = null;
+										symbol = new RawrVariable(_varName, _type,  _varValue);
+									
+										if(!symbolTable.exists(_varName)){
+											symbolTable.add(symbol);
+											
+										} else {
+											throw new RawrSemanticException("Variable "+ symbol + " already declared");
+										}
+									
 				}
 				}
 				setState(45);
@@ -349,24 +355,24 @@ public class RawrLangParser extends Parser {
 		return _localctx;
 	}
 
-	public static class TipoContext extends ParserRuleContext {
-		public TipoContext(ParserRuleContext parent, int invokingState) {
+	public static class TypeContext extends ParserRuleContext {
+		public TypeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_tipo; }
+		@Override public int getRuleIndex() { return RULE_type; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).enterTipo(this);
+			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).enterType(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).exitTipo(this);
+			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).exitType(this);
 		}
 	}
 
-	public final TipoContext tipo() throws RecognitionException {
-		TipoContext _localctx = new TipoContext(_ctx, getState());
-		enterRule(_localctx, 6, RULE_tipo);
+	public final TypeContext type() throws RecognitionException {
+		TypeContext _localctx = new TypeContext(_ctx, getState());
+		enterRule(_localctx, 6, RULE_type);
 		try {
 			setState(53);
 			_errHandler.sync(this);
@@ -376,7 +382,7 @@ public class RawrLangParser extends Parser {
 				{
 				setState(49);
 				match(T__2);
-				_tipo = RawrVariable.NUMBER;
+				_type = RawrVariable.NUMBER;
 				}
 				break;
 			case T__3:
@@ -384,7 +390,7 @@ public class RawrLangParser extends Parser {
 				{
 				setState(51);
 				match(T__3);
-				_tipo = RawrVariable.TEXT;
+				_type = RawrVariable.TEXT;
 				}
 				break;
 			default:
@@ -402,37 +408,38 @@ public class RawrLangParser extends Parser {
 		return _localctx;
 	}
 
-	public static class BlocoContext extends ParserRuleContext {
+	public static class CodeContext extends ParserRuleContext {
 		public List<CmdContext> cmd() {
 			return getRuleContexts(CmdContext.class);
 		}
 		public CmdContext cmd(int i) {
 			return getRuleContext(CmdContext.class,i);
 		}
-		public BlocoContext(ParserRuleContext parent, int invokingState) {
+		public CodeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_bloco; }
+		@Override public int getRuleIndex() { return RULE_code; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).enterBloco(this);
+			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).enterCode(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).exitBloco(this);
+			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).exitCode(this);
 		}
 	}
 
-	public final BlocoContext bloco() throws RecognitionException {
-		BlocoContext _localctx = new BlocoContext(_ctx, getState());
-		enterRule(_localctx, 8, RULE_bloco);
+	public final CodeContext code() throws RecognitionException {
+		CodeContext _localctx = new CodeContext(_ctx, getState());
+		enterRule(_localctx, 8, RULE_code);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			 curThread = new ArrayList<AbstractCommand>();
+			 
+					  curThread = new ArrayList<AbstractCommand>();
 					  stack.push(curThread);
-					
+				   
 			setState(57); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -461,17 +468,17 @@ public class RawrLangParser extends Parser {
 	}
 
 	public static class CmdContext extends ParserRuleContext {
-		public CmdleituraContext cmdleitura() {
-			return getRuleContext(CmdleituraContext.class,0);
+		public Cmd_readContext cmd_read() {
+			return getRuleContext(Cmd_readContext.class,0);
 		}
-		public CmdescritaContext cmdescrita() {
-			return getRuleContext(CmdescritaContext.class,0);
+		public Cmd_writeContext cmd_write() {
+			return getRuleContext(Cmd_writeContext.class,0);
 		}
-		public CmdattribContext cmdattrib() {
-			return getRuleContext(CmdattribContext.class,0);
+		public Cmd_attribContext cmd_attrib() {
+			return getRuleContext(Cmd_attribContext.class,0);
 		}
-		public CmdselecaoContext cmdselecao() {
-			return getRuleContext(CmdselecaoContext.class,0);
+		public Cmd_conditionalContext cmd_conditional() {
+			return getRuleContext(Cmd_conditionalContext.class,0);
 		}
 		public CmdContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -498,28 +505,28 @@ public class RawrLangParser extends Parser {
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(61);
-				cmdleitura();
+				cmd_read();
 				}
 				break;
 			case T__5:
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(62);
-				cmdescrita();
+				cmd_write();
 				}
 				break;
 			case ID:
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(63);
-				cmdattrib();
+				cmd_attrib();
 				}
 				break;
 			case T__6:
 				enterOuterAlt(_localctx, 4);
 				{
 				setState(64);
-				cmdselecao();
+				cmd_conditional();
 				}
 				break;
 			default:
@@ -537,28 +544,28 @@ public class RawrLangParser extends Parser {
 		return _localctx;
 	}
 
-	public static class CmdleituraContext extends ParserRuleContext {
+	public static class Cmd_readContext extends ParserRuleContext {
 		public TerminalNode AP() { return getToken(RawrLangParser.AP, 0); }
 		public TerminalNode ID() { return getToken(RawrLangParser.ID, 0); }
 		public TerminalNode FP() { return getToken(RawrLangParser.FP, 0); }
 		public TerminalNode SC() { return getToken(RawrLangParser.SC, 0); }
-		public CmdleituraContext(ParserRuleContext parent, int invokingState) {
+		public Cmd_readContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_cmdleitura; }
+		@Override public int getRuleIndex() { return RULE_cmd_read; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).enterCmdleitura(this);
+			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).enterCmd_read(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).exitCmdleitura(this);
+			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).exitCmd_read(this);
 		}
 	}
 
-	public final CmdleituraContext cmdleitura() throws RecognitionException {
-		CmdleituraContext _localctx = new CmdleituraContext(_ctx, getState());
-		enterRule(_localctx, 12, RULE_cmdleitura);
+	public final Cmd_readContext cmd_read() throws RecognitionException {
+		Cmd_readContext _localctx = new Cmd_readContext(_ctx, getState());
+		enterRule(_localctx, 12, RULE_cmd_read);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
@@ -569,9 +576,10 @@ public class RawrLangParser extends Parser {
 			match(AP);
 			setState(69);
 			match(ID);
-			variableValidate(_input.LT(-1).getText());
-									_readId = _input.LT(-1).getText();
-									
+
+										variableValidate(_input.LT(-1).getText());
+										_readId = _input.LT(-1).getText();
+									 
 			setState(71);
 			match(FP);
 			setState(73);
@@ -586,9 +594,9 @@ public class RawrLangParser extends Parser {
 
 
 						 	RawrVariable var = (RawrVariable) symbolTable.get(_readId);
-						 	CommandLeitura cmd = new CommandLeitura(_readId, var);
+						 	CommandRead cmd = new CommandRead(_readId, var);
 							stack.peek().add(cmd);
-						 
+						
 			}
 		}
 		catch (RecognitionException re) {
@@ -602,28 +610,28 @@ public class RawrLangParser extends Parser {
 		return _localctx;
 	}
 
-	public static class CmdescritaContext extends ParserRuleContext {
+	public static class Cmd_writeContext extends ParserRuleContext {
 		public TerminalNode AP() { return getToken(RawrLangParser.AP, 0); }
 		public TerminalNode ID() { return getToken(RawrLangParser.ID, 0); }
 		public TerminalNode FP() { return getToken(RawrLangParser.FP, 0); }
 		public TerminalNode SC() { return getToken(RawrLangParser.SC, 0); }
-		public CmdescritaContext(ParserRuleContext parent, int invokingState) {
+		public Cmd_writeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_cmdescrita; }
+		@Override public int getRuleIndex() { return RULE_cmd_write; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).enterCmdescrita(this);
+			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).enterCmd_write(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).exitCmdescrita(this);
+			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).exitCmd_write(this);
 		}
 	}
 
-	public final CmdescritaContext cmdescrita() throws RecognitionException {
-		CmdescritaContext _localctx = new CmdescritaContext(_ctx, getState());
-		enterRule(_localctx, 14, RULE_cmdescrita);
+	public final Cmd_writeContext cmd_write() throws RecognitionException {
+		Cmd_writeContext _localctx = new Cmd_writeContext(_ctx, getState());
+		enterRule(_localctx, 14, RULE_cmd_write);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
@@ -634,9 +642,10 @@ public class RawrLangParser extends Parser {
 			match(AP);
 			setState(79);
 			match(ID);
-			variableValidate(_input.LT(-1).getText());
-								 	_writeId = _input.LT(-1).getText();
-								 	
+
+											variableValidate(_input.LT(-1).getText());
+											_writeId = _input.LT(-1).getText();
+									   
 			setState(81);
 			match(FP);
 			setState(83);
@@ -650,7 +659,7 @@ public class RawrLangParser extends Parser {
 			}
 
 
-						 	CommandEscrita cmd = new CommandEscrita(_writeId);
+						 	CommandWrite cmd = new CommandWrite(_writeId);
 							stack.peek().add(cmd);
 						 
 			}
@@ -666,44 +675,43 @@ public class RawrLangParser extends Parser {
 		return _localctx;
 	}
 
-	public static class CmdattribContext extends ParserRuleContext {
+	public static class Cmd_attribContext extends ParserRuleContext {
 		public TerminalNode ID() { return getToken(RawrLangParser.ID, 0); }
 		public TerminalNode ATTR() { return getToken(RawrLangParser.ATTR, 0); }
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
 		public TerminalNode SC() { return getToken(RawrLangParser.SC, 0); }
-		public CmdattribContext(ParserRuleContext parent, int invokingState) {
+		public Cmd_attribContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_cmdattrib; }
+		@Override public int getRuleIndex() { return RULE_cmd_attrib; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).enterCmdattrib(this);
+			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).enterCmd_attrib(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).exitCmdattrib(this);
+			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).exitCmd_attrib(this);
 		}
 	}
 
-	public final CmdattribContext cmdattrib() throws RecognitionException {
-		CmdattribContext _localctx = new CmdattribContext(_ctx, getState());
-		enterRule(_localctx, 16, RULE_cmdattrib);
+	public final Cmd_attribContext cmd_attrib() throws RecognitionException {
+		Cmd_attribContext _localctx = new Cmd_attribContext(_ctx, getState());
+		enterRule(_localctx, 16, RULE_cmd_attrib);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(87);
 			match(ID);
-			variableValidate(_input.LT(-1).getText());
-							_exprId = _input.LT(-1).getText();
-						
+
+								variableValidate(_input.LT(-1).getText());
+								_exprId = _input.LT(-1).getText();
+							
 			setState(89);
 			match(ATTR);
-
-							_exprContent = "";
-						
+			_exprContent = "";
 			setState(91);
 			expr();
 			setState(93);
@@ -717,7 +725,7 @@ public class RawrLangParser extends Parser {
 			}
 
 
-							CommandAtribuicao cmd = new CommandAtribuicao (_exprId, _exprContent);
+							CommandAttrib cmd = new CommandAttrib (_exprId, _exprContent);
 							stack.peek().add(cmd);
 						
 			}
@@ -733,7 +741,7 @@ public class RawrLangParser extends Parser {
 		return _localctx;
 	}
 
-	public static class CmdselecaoContext extends ParserRuleContext {
+	public static class Cmd_conditionalContext extends ParserRuleContext {
 		public TerminalNode AP() { return getToken(RawrLangParser.AP, 0); }
 		public List<TerminalNode> ID() { return getTokens(RawrLangParser.ID); }
 		public TerminalNode ID(int i) {
@@ -756,23 +764,23 @@ public class RawrLangParser extends Parser {
 		public CmdContext cmd(int i) {
 			return getRuleContext(CmdContext.class,i);
 		}
-		public CmdselecaoContext(ParserRuleContext parent, int invokingState) {
+		public Cmd_conditionalContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_cmdselecao; }
+		@Override public int getRuleIndex() { return RULE_cmd_conditional; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).enterCmdselecao(this);
+			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).enterCmd_conditional(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).exitCmdselecao(this);
+			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).exitCmd_conditional(this);
 		}
 	}
 
-	public final CmdselecaoContext cmdselecao() throws RecognitionException {
-		CmdselecaoContext _localctx = new CmdselecaoContext(_ctx, getState());
-		enterRule(_localctx, 18, RULE_cmdselecao);
+	public final Cmd_conditionalContext cmd_conditional() throws RecognitionException {
+		Cmd_conditionalContext _localctx = new Cmd_conditionalContext(_ctx, getState());
+		enterRule(_localctx, 18, RULE_cmd_conditional);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
@@ -802,9 +810,10 @@ public class RawrLangParser extends Parser {
 			match(FP);
 			setState(106);
 			match(ACH);
-			 curThread = new ArrayList<AbstractCommand>();
-							  	stack.push(curThread);
-							  
+			 
+						  			curThread = new ArrayList<AbstractCommand>();
+							  		stack.push(curThread);
+							   
 			setState(109); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -821,7 +830,7 @@ public class RawrLangParser extends Parser {
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__4) | (1L << T__5) | (1L << T__6) | (1L << ID))) != 0) );
 			setState(113);
 			match(FCH);
-			 listaTrue = stack.pop(); 
+			 listTrue = stack.pop(); 
 			setState(126);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -832,9 +841,9 @@ public class RawrLangParser extends Parser {
 				setState(116);
 				match(ACH);
 
-						   	 	   	curThread = new ArrayList<AbstractCommand>();
-								  	stack.push(curThread);
-						   	 	   
+							   	 	   	curThread = new ArrayList<AbstractCommand>();
+									  	stack.push(curThread);
+									 
 				{
 				setState(119); 
 				_errHandler.sync(this);
@@ -854,10 +863,10 @@ public class RawrLangParser extends Parser {
 				setState(123);
 				match(FCH);
 				 
-						   	 	     listaFalse = stack.pop(); 
-						   	 	   	 CommandDecisao cmd = new CommandDecisao (_exprDecision, listaTrue, listaFalse);
-						   	 	   	 stack.peek().add(cmd);
-						   	 	   
+							   	 	     listFalse = stack.pop(); 
+							   	 	   	 CommandConditional cmd = new CommandConditional (_exprDecision, listTrue, listFalse);
+							   	 	   	 stack.peek().add(cmd);
+						   	 	    
 				}
 			}
 
@@ -875,11 +884,11 @@ public class RawrLangParser extends Parser {
 	}
 
 	public static class ExprContext extends ParserRuleContext {
-		public List<TermoContext> termo() {
-			return getRuleContexts(TermoContext.class);
+		public List<TermContext> term() {
+			return getRuleContexts(TermContext.class);
 		}
-		public TermoContext termo(int i) {
-			return getRuleContext(TermoContext.class,i);
+		public TermContext term(int i) {
+			return getRuleContext(TermContext.class,i);
 		}
 		public List<TerminalNode> OP() { return getTokens(RawrLangParser.OP); }
 		public TerminalNode OP(int i) {
@@ -907,7 +916,7 @@ public class RawrLangParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(128);
-			termo();
+			term();
 			setState(134);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
@@ -916,11 +925,9 @@ public class RawrLangParser extends Parser {
 				{
 				setState(129);
 				match(OP);
-
-							_exprContent += _input.LT(-1).getText();
-						
+				_exprContent += _input.LT(-1).getText();
 				setState(131);
-				termo();
+				term();
 				}
 				}
 				setState(136);
@@ -940,26 +947,26 @@ public class RawrLangParser extends Parser {
 		return _localctx;
 	}
 
-	public static class TermoContext extends ParserRuleContext {
+	public static class TermContext extends ParserRuleContext {
 		public TerminalNode ID() { return getToken(RawrLangParser.ID, 0); }
 		public TerminalNode NUMBER() { return getToken(RawrLangParser.NUMBER, 0); }
-		public TermoContext(ParserRuleContext parent, int invokingState) {
+		public TermContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_termo; }
+		@Override public int getRuleIndex() { return RULE_term; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).enterTermo(this);
+			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).enterTerm(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).exitTermo(this);
+			if ( listener instanceof RawrLangListener ) ((RawrLangListener)listener).exitTerm(this);
 		}
 	}
 
-	public final TermoContext termo() throws RecognitionException {
-		TermoContext _localctx = new TermoContext(_ctx, getState());
-		enterRule(_localctx, 22, RULE_termo);
+	public final TermContext term() throws RecognitionException {
+		TermContext _localctx = new TermContext(_ctx, getState());
+		enterRule(_localctx, 22, RULE_term);
 		try {
 			setState(141);
 			_errHandler.sync(this);
@@ -969,9 +976,10 @@ public class RawrLangParser extends Parser {
 				{
 				setState(137);
 				match(ID);
-				variableValidate(_input.LT(-1).getText());
-							_exprContent += _input.LT(-1).getText();
-						
+
+								variableValidate(_input.LT(-1).getText());
+								_exprContent += _input.LT(-1).getText();
+						   
 				}
 				break;
 			case NUMBER:
@@ -979,9 +987,7 @@ public class RawrLangParser extends Parser {
 				{
 				setState(139);
 				match(NUMBER);
-
-							_exprContent += _input.LT(-1).getText();
-						
+				_exprContent += _input.LT(-1).getText();
 				}
 				break;
 			default:

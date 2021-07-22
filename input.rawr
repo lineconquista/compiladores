@@ -1,17 +1,17 @@
 start:
 
-	numero a, b;
-	texto t1;
+	number a, b;
+	text t1;
 	read(a);
 	read(b);
 	write(a);
 	b = 2
 	a = 1 + 2 * 3
 	
-	se ( b == 4 ) {
+	if ( b == 4 ) {
 		write(b)
 	}
-	senao {
+	else {
 		read(a)
 	}
 

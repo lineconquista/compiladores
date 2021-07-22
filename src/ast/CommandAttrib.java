@@ -1,11 +1,11 @@
 package ast;
 
-public class CommandAtribuicao extends AbstractCommand {
+public class CommandAttrib extends AbstractCommand {
 	
 	private String id;
 	private String expr;
 	
-	public CommandAtribuicao (String id, String expr) {
+	public CommandAttrib (String id, String expr) {
 			this.id = id;
 			this.expr = expr;
 	}

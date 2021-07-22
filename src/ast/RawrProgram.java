@@ -10,7 +10,7 @@ import datastructures.RawrSymbolTable;
 public class RawrProgram {	
 	
 	private RawrSymbolTable varTable;
-	private ArrayList<AbstractCommand> comandos;
+	private ArrayList<AbstractCommand> commands;
 	private String programName;
 	
 	public void generateTarget() {
@@ -26,7 +26,7 @@ public class RawrProgram {
 			str.append(symbol.generateJavaCode()+"\n");	
 		}
 		
-		for(AbstractCommand command: comandos) {
+		for(AbstractCommand command: commands) {
 			str.append(command.generateJavaCode()+"\n");	
 		}
 		
@@ -53,12 +53,12 @@ public class RawrProgram {
 		this.varTable = varTable;
 	}
 	
-	public ArrayList<AbstractCommand> getComandos() {
-		return comandos;
+	public ArrayList<AbstractCommand> getCommands() {
+		return commands;
 	}
 	
-	public void setComandos(ArrayList<AbstractCommand> comandos) {
-		this.comandos = comandos;
+	public void setCommands(ArrayList<AbstractCommand> commands) {
+		this.commands = commands;
 	}
 	
 	public String getProgramName() {

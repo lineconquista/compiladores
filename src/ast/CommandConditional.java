@@ -2,16 +2,16 @@ package ast;
 
 import java.util.ArrayList;
 
-public class CommandDecisao extends AbstractCommand {
+public class CommandConditional extends AbstractCommand {
 	
 	private String condition;
-	private ArrayList<AbstractCommand> listaTrue;
-	private ArrayList<AbstractCommand> listaFalse;
+	private ArrayList<AbstractCommand> listTrue;
+	private ArrayList<AbstractCommand> listFalse;
 	
-	public CommandDecisao (String condition, ArrayList<AbstractCommand> lt, ArrayList<AbstractCommand> lf ) {
+	public CommandConditional (String condition, ArrayList<AbstractCommand> lt, ArrayList<AbstractCommand> lf ) {
 			this.condition = condition;
-			this.listaTrue = lt;
-			this.listaFalse = lf;
+			this.listTrue = lt;
+			this.listFalse = lf;
 	}
 	
 	@Override
@@ -21,16 +21,16 @@ public class CommandDecisao extends AbstractCommand {
 		
 		str.append("if ("+condition+") {");
 		
-		for(AbstractCommand cmd: listaTrue) {
+		for(AbstractCommand cmd: listTrue) {
 			str.append(cmd.generateJavaCode());
 		}
 		
 		str.append("}");
 		
-		if (listaFalse.size() > 0) {
+		if (listFalse.size() > 0) {
 			str.append("else {");
 			
-			for(AbstractCommand cmd: listaFalse) {
+			for(AbstractCommand cmd: listFalse) {
 				str.append(cmd.generateJavaCode());
 			}
 			

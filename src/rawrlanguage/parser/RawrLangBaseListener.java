@@ -9,10 +9,10 @@ package rawrlanguage.parser;
 	import java.util.Stack;
 	import ast.AbstractCommand;
 	import ast.RawrProgram;
-	import ast.CommandLeitura;
-	import ast.CommandEscrita;
-	import ast.CommandAtribuicao;
-	import ast.CommandDecisao;
+	import ast.CommandRead;
+	import ast.CommandWrite;
+	import ast.CommandAttrib;
+	import ast.CommandConditional;
 
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -54,37 +54,37 @@ public class RawrLangBaseListener implements RawrLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDeclaravar(RawrLangParser.DeclaravarContext ctx) { }
+	@Override public void enterDecl_var(RawrLangParser.Decl_varContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDeclaravar(RawrLangParser.DeclaravarContext ctx) { }
+	@Override public void exitDecl_var(RawrLangParser.Decl_varContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTipo(RawrLangParser.TipoContext ctx) { }
+	@Override public void enterType(RawrLangParser.TypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTipo(RawrLangParser.TipoContext ctx) { }
+	@Override public void exitType(RawrLangParser.TypeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBloco(RawrLangParser.BlocoContext ctx) { }
+	@Override public void enterCode(RawrLangParser.CodeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitBloco(RawrLangParser.BlocoContext ctx) { }
+	@Override public void exitCode(RawrLangParser.CodeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -102,49 +102,49 @@ public class RawrLangBaseListener implements RawrLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCmdleitura(RawrLangParser.CmdleituraContext ctx) { }
+	@Override public void enterCmd_read(RawrLangParser.Cmd_readContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCmdleitura(RawrLangParser.CmdleituraContext ctx) { }
+	@Override public void exitCmd_read(RawrLangParser.Cmd_readContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCmdescrita(RawrLangParser.CmdescritaContext ctx) { }
+	@Override public void enterCmd_write(RawrLangParser.Cmd_writeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCmdescrita(RawrLangParser.CmdescritaContext ctx) { }
+	@Override public void exitCmd_write(RawrLangParser.Cmd_writeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCmdattrib(RawrLangParser.CmdattribContext ctx) { }
+	@Override public void enterCmd_attrib(RawrLangParser.Cmd_attribContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCmdattrib(RawrLangParser.CmdattribContext ctx) { }
+	@Override public void exitCmd_attrib(RawrLangParser.Cmd_attribContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCmdselecao(RawrLangParser.CmdselecaoContext ctx) { }
+	@Override public void enterCmd_conditional(RawrLangParser.Cmd_conditionalContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCmdselecao(RawrLangParser.CmdselecaoContext ctx) { }
+	@Override public void exitCmd_conditional(RawrLangParser.Cmd_conditionalContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -162,13 +162,13 @@ public class RawrLangBaseListener implements RawrLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTermo(RawrLangParser.TermoContext ctx) { }
+	@Override public void enterTerm(RawrLangParser.TermContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTermo(RawrLangParser.TermoContext ctx) { }
+	@Override public void exitTerm(RawrLangParser.TermContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

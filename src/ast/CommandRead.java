@@ -2,12 +2,12 @@ package ast;
 
 import datastructures.RawrVariable;
 
-public class CommandLeitura extends AbstractCommand {
+public class CommandRead extends AbstractCommand {
 	
 	private String id;
 	private RawrVariable var;
 	
-	public CommandLeitura (String id, RawrVariable var) {
+	public CommandRead (String id, RawrVariable var) {
 			this.id = id;
 			this.var = var;
 	}

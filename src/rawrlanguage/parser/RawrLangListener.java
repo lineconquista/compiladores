@@ -9,10 +9,10 @@ package rawrlanguage.parser;
 	import java.util.Stack;
 	import ast.AbstractCommand;
 	import ast.RawrProgram;
-	import ast.CommandLeitura;
-	import ast.CommandEscrita;
-	import ast.CommandAtribuicao;
-	import ast.CommandDecisao;
+	import ast.CommandRead;
+	import ast.CommandWrite;
+	import ast.CommandAttrib;
+	import ast.CommandConditional;
 
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -42,35 +42,35 @@ public interface RawrLangListener extends ParseTreeListener {
 	 */
 	void exitDecl(RawrLangParser.DeclContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link RawrLangParser#declaravar}.
+	 * Enter a parse tree produced by {@link RawrLangParser#decl_var}.
 	 * @param ctx the parse tree
 	 */
-	void enterDeclaravar(RawrLangParser.DeclaravarContext ctx);
+	void enterDecl_var(RawrLangParser.Decl_varContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link RawrLangParser#declaravar}.
+	 * Exit a parse tree produced by {@link RawrLangParser#decl_var}.
 	 * @param ctx the parse tree
 	 */
-	void exitDeclaravar(RawrLangParser.DeclaravarContext ctx);
+	void exitDecl_var(RawrLangParser.Decl_varContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link RawrLangParser#tipo}.
+	 * Enter a parse tree produced by {@link RawrLangParser#type}.
 	 * @param ctx the parse tree
 	 */
-	void enterTipo(RawrLangParser.TipoContext ctx);
+	void enterType(RawrLangParser.TypeContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link RawrLangParser#tipo}.
+	 * Exit a parse tree produced by {@link RawrLangParser#type}.
 	 * @param ctx the parse tree
 	 */
-	void exitTipo(RawrLangParser.TipoContext ctx);
+	void exitType(RawrLangParser.TypeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link RawrLangParser#bloco}.
+	 * Enter a parse tree produced by {@link RawrLangParser#code}.
 	 * @param ctx the parse tree
 	 */
-	void enterBloco(RawrLangParser.BlocoContext ctx);
+	void enterCode(RawrLangParser.CodeContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link RawrLangParser#bloco}.
+	 * Exit a parse tree produced by {@link RawrLangParser#code}.
 	 * @param ctx the parse tree
 	 */
-	void exitBloco(RawrLangParser.BlocoContext ctx);
+	void exitCode(RawrLangParser.CodeContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link RawrLangParser#cmd}.
 	 * @param ctx the parse tree
@@ -82,45 +82,45 @@ public interface RawrLangListener extends ParseTreeListener {
 	 */
 	void exitCmd(RawrLangParser.CmdContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link RawrLangParser#cmdleitura}.
+	 * Enter a parse tree produced by {@link RawrLangParser#cmd_read}.
 	 * @param ctx the parse tree
 	 */
-	void enterCmdleitura(RawrLangParser.CmdleituraContext ctx);
+	void enterCmd_read(RawrLangParser.Cmd_readContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link RawrLangParser#cmdleitura}.
+	 * Exit a parse tree produced by {@link RawrLangParser#cmd_read}.
 	 * @param ctx the parse tree
 	 */
-	void exitCmdleitura(RawrLangParser.CmdleituraContext ctx);
+	void exitCmd_read(RawrLangParser.Cmd_readContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link RawrLangParser#cmdescrita}.
+	 * Enter a parse tree produced by {@link RawrLangParser#cmd_write}.
 	 * @param ctx the parse tree
 	 */
-	void enterCmdescrita(RawrLangParser.CmdescritaContext ctx);
+	void enterCmd_write(RawrLangParser.Cmd_writeContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link RawrLangParser#cmdescrita}.
+	 * Exit a parse tree produced by {@link RawrLangParser#cmd_write}.
 	 * @param ctx the parse tree
 	 */
-	void exitCmdescrita(RawrLangParser.CmdescritaContext ctx);
+	void exitCmd_write(RawrLangParser.Cmd_writeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link RawrLangParser#cmdattrib}.
+	 * Enter a parse tree produced by {@link RawrLangParser#cmd_attrib}.
 	 * @param ctx the parse tree
 	 */
-	void enterCmdattrib(RawrLangParser.CmdattribContext ctx);
+	void enterCmd_attrib(RawrLangParser.Cmd_attribContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link RawrLangParser#cmdattrib}.
+	 * Exit a parse tree produced by {@link RawrLangParser#cmd_attrib}.
 	 * @param ctx the parse tree
 	 */
-	void exitCmdattrib(RawrLangParser.CmdattribContext ctx);
+	void exitCmd_attrib(RawrLangParser.Cmd_attribContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link RawrLangParser#cmdselecao}.
+	 * Enter a parse tree produced by {@link RawrLangParser#cmd_conditional}.
 	 * @param ctx the parse tree
 	 */
-	void enterCmdselecao(RawrLangParser.CmdselecaoContext ctx);
+	void enterCmd_conditional(RawrLangParser.Cmd_conditionalContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link RawrLangParser#cmdselecao}.
+	 * Exit a parse tree produced by {@link RawrLangParser#cmd_conditional}.
 	 * @param ctx the parse tree
 	 */
-	void exitCmdselecao(RawrLangParser.CmdselecaoContext ctx);
+	void exitCmd_conditional(RawrLangParser.Cmd_conditionalContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link RawrLangParser#expr}.
 	 * @param ctx the parse tree
@@ -132,13 +132,13 @@ public interface RawrLangListener extends ParseTreeListener {
 	 */
 	void exitExpr(RawrLangParser.ExprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link RawrLangParser#termo}.
+	 * Enter a parse tree produced by {@link RawrLangParser#term}.
 	 * @param ctx the parse tree
 	 */
-	void enterTermo(RawrLangParser.TermoContext ctx);
+	void enterTerm(RawrLangParser.TermContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link RawrLangParser#termo}.
+	 * Exit a parse tree produced by {@link RawrLangParser#term}.
 	 * @param ctx the parse tree
 	 */
-	void exitTermo(RawrLangParser.TermoContext ctx);
+	void exitTerm(RawrLangParser.TermContext ctx);
 }

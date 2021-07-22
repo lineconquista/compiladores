@@ -2,12 +2,12 @@ token literal names:
 null
 'start:'
 'end'
-'numero'
-'texto'
+'number'
+'text'
 'read'
 'write'
-'se'
-'senao'
+'if'
+'else'
 '('
 ')'
 ';'
@@ -47,16 +47,16 @@ WS
 rule names:
 prog
 decl
-declaravar
-tipo
-bloco
+decl_var
+type
+code
 cmd
-cmdleitura
-cmdescrita
-cmdattrib
-cmdselecao
+cmd_read
+cmd_write
+cmd_attrib
+cmd_conditional
 expr
-termo
+term
 
 
 atn:

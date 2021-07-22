@@ -1,11 +1,11 @@
 package ast;
 
 
-public class CommandEscrita extends AbstractCommand {
+public class CommandWrite extends AbstractCommand {
 	
 	private String id;
 	
-	public CommandEscrita (String id) {
+	public CommandWrite (String id) {
 			this.id = id;
 	}
 	
