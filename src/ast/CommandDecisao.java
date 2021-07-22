@@ -16,26 +16,28 @@ public class CommandDecisao extends AbstractCommand {
 	
 	@Override
 	public String generateJavaCode() {
+		
 		StringBuilder str = new StringBuilder();
+		
 		str.append("if ("+condition+") {");
+		
 		for(AbstractCommand cmd: listaTrue) {
 			str.append(cmd.generateJavaCode());
 		}
+		
 		str.append("}");
+		
 		if (listaFalse.size() > 0) {
 			str.append("else {");
+			
 			for(AbstractCommand cmd: listaFalse) {
 				str.append(cmd.generateJavaCode());
 			}
+			
 			str.append("}");
 		}
+		
 		return str.toString();
-	}
-	
-	@Override
-	public String toString() {
-		return "CommandDecisao [condition=" + condition + ", listaTrue=" + listaTrue + ", listaFalse=" + listaFalse
-				+ "]";
 	}
 	
 }

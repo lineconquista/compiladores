@@ -8,12 +8,15 @@ import datastructures.RawrSymbol;
 import datastructures.RawrSymbolTable;
 
 public class RawrProgram {	
+	
 	private RawrSymbolTable varTable;
 	private ArrayList<AbstractCommand> comandos;
 	private String programName;
 	
 	public void generateTarget() {
+		
 		StringBuilder str = new StringBuilder();
+		
 		str.append("import java.util.Scanner; \n");
 		str.append("public class MainClass{ \n");
 		str.append("	public static void main (String args[]){ \n");
@@ -31,29 +34,37 @@ public class RawrProgram {
 		str.append("}");
 		
 		try {
+			
 			FileWriter fr = new FileWriter (new File ("MainClass.java"));
 			fr.write(str.toString());
 			fr.close();
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		
 	}
 	
 	public RawrSymbolTable getVarTable() {
 		return varTable;
 	}
+	
 	public void setVarTable(RawrSymbolTable varTable) {
 		this.varTable = varTable;
 	}
+	
 	public ArrayList<AbstractCommand> getComandos() {
 		return comandos;
 	}
+	
 	public void setComandos(ArrayList<AbstractCommand> comandos) {
 		this.comandos = comandos;
 	}
+	
 	public String getProgramName() {
 		return programName;
 	}
+	
 	public void setProgramName(String programName) {
 		this.programName = programName;
 	}

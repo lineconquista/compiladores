@@ -13,9 +13,4 @@ public class CommandEscrita extends AbstractCommand {
 	public String generateJavaCode() {
 		return "System.out.println("+id+");";
 	}
-	
-	@Override
-	public String toString() {
-		return "CommandEscrita [id="+ id + "]";
-	}
 }

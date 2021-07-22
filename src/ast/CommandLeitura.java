@@ -17,8 +17,4 @@ public class CommandLeitura extends AbstractCommand {
 		return id + "= _key."+ (var.getType()==RawrVariable.NUMBER? "nextDouble();":"nextLine();") ;
 	}
 	
-	@Override
-	public String toString() {
-		return "CommandLeitura [id="+ id + "]";
-	}
 }
