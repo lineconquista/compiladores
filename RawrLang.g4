@@ -70,7 +70,7 @@ decl_var : type
 						symbolTable.add(symbol);
 						
 					} else {
-						throw new RawrSemanticException("Variable "+ symbol + " already declared");
+						throw new RawrSemanticException("Variable "+ _varName + " already declared");
 					}
 		   		}
 		
@@ -83,7 +83,7 @@ decl_var : type
 							symbolTable.add(symbol);
 							
 						} else {
-							throw new RawrSemanticException("Variable "+ symbol + " already declared");
+							throw new RawrSemanticException("Variable "+ _varName + " already declared");
 						}
 					}
 			)* SC?;

@@ -301,7 +301,7 @@ public class RawrLangParser extends Parser {
 									symbolTable.add(symbol);
 									
 								} else {
-									throw new RawrSemanticException("Variable "+ symbol + " already declared");
+									throw new RawrSemanticException("Variable ""+ _varName + "" already declared");
 								}
 					   		
 			setState(43);
@@ -323,7 +323,7 @@ public class RawrLangParser extends Parser {
 											symbolTable.add(symbol);
 											
 										} else {
-											throw new RawrSemanticException("Variable "+ symbol + " already declared");
+											throw new RawrSemanticException("Variable ""+ _varName + "" already declared");
 										}
 									
 				}
