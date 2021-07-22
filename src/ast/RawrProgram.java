@@ -10,7 +10,12 @@ public class RawrProgram {
 	private String programName;
 	
 	public void generateTarget() {
-		
+		StringBuilder str = new StringBuilder();
+		str.append("import java.util.Scanner;");
+		str.append("public class MainClass{");
+		str.append("	public static void main (String args[]){");
+		str.append("	}");
+		str.append("}");
 		
 		
 	}

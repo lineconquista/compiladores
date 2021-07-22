@@ -5,10 +5,13 @@ grammar RawrLang;
 	import datastructures.RawrSymbolTable;
 	import exceptions.RawrSemanticException;
 	import java.util.ArrayList;
+	import java.util.Stack;
 	import ast.AbstractCommand;
 	import ast.RawrProgram;
 	import ast.CommandLeitura;
 	import ast.CommandEscrita;
+	import ast.CommandAtribuicao;
+	import ast.CommandDecisao;
 }
 
 @members{
@@ -18,9 +21,15 @@ grammar RawrLang;
 	private RawrSymbolTable symbolTable = new RawrSymbolTable();
 	private RawrSymbol symbol;
 	private RawrProgram program = new RawrProgram();
-	private ArrayList <AbstractCommand> curThread = new ArrayList<AbstractCommand>();
+	private ArrayList <AbstractCommand> curThread;
 	private String _readId;
 	private String _writeId;
+	private String _exprId;
+	private String _exprContent;
+	private String _exprDecision;
+	private Stack<ArrayList<AbstractCommand>> stack = new Stack <ArrayList<AbstractCommand>>();
+	private ArrayList<AbstractCommand> listaTrue;
+	private ArrayList<AbstractCommand> listaFalse;
 	
 	public void variableValidate(String id){
 	
@@ -37,7 +46,8 @@ grammar RawrLang;
 }
 
 prog : 'start:' decl bloco  'end'  
-		{program.setComandos(curThread);}
+		{program.setComandos(stack.pop());
+		 }
 	 ;
 
 decl: (declaravar)+
@@ -69,7 +79,10 @@ tipo	: 'numero' {_tipo = RawrVariable.NUMBER;}
 	    | 'texto' {_tipo = RawrVariable.TEXT;}
 	    ;
 
-bloco : (cmd)+
+bloco : { curThread = new ArrayList<AbstractCommand>();
+		  stack.push(curThread);
+		}
+		(cmd)+
       ;
 
 cmd	: cmdleitura 
@@ -86,7 +99,7 @@ cmdleitura : 'read' AP
 					SC?
 			 {
 			 	CommandLeitura cmd = new CommandLeitura(_readId);
-				curThread.add(cmd);
+				stack.peek().add(cmd);
 			 }
            ;
  
@@ -98,26 +111,66 @@ cmdescrita : 'write' AP
 					 SC?
 			{
 			 	CommandEscrita cmd = new CommandEscrita(_writeId);
-				curThread.add(cmd);
+				stack.peek().add(cmd);
 			 }
            ;
  
 
-cmdattrib : ID {variableValidate(_input.LT(-1).getText());} 
-			ATTR 
+cmdattrib : ID {variableValidate(_input.LT(-1).getText());
+				_exprId = _input.LT(-1).getText();
+			} 
+			ATTR {
+				_exprContent = "";
+			}
 			expr 
-			SC?
+			SC?{
+				CommandAtribuicao cmd = new CommandAtribuicao (_exprId, _exprContent);
+				stack.peek().add(cmd);
+			}
           ;
           
-cmdselecao : 'se' AP ID OPREL (ID | NUMBER) FP ACH (cmd)+ FCH
-		   	 ('senao' ACH (cmd+) FCH)?
+cmdselecao : 'se' AP 
+				  ID { _exprDecision = _input.LT(-1).getText(); }
+				  OPREL  { _exprDecision += _input.LT(-1).getText(); }
+				  (ID | NUMBER)  { _exprDecision += _input.LT(-1).getText(); }
+				  FP
+				  ACH 
+				  { curThread = new ArrayList<AbstractCommand>();
+				  	stack.push(curThread);
+				  }
+				  (cmd)+
+				  FCH
+				  { listaTrue = stack.pop(); }
+		   	 	  (
+		   	 	   'senao' 
+		   	 	   ACH 
+		   	 	   {
+		   	 	   	curThread = new ArrayList<AbstractCommand>();
+				  	stack.push(curThread);
+		   	 	   }
+		   	 	   (cmd+) 
+		   	 	   FCH
+		   	 	   { 
+		   	 	     listaFalse = stack.pop(); 
+		   	 	   	 CommandDecisao cmd = new CommandDecisao (_exprDecision, listaTrue, listaFalse);
+		   	 	   	 stack.peek().add(cmd);
+		   	 	   }
+		   	 	  )?
 		   ;
           
-expr : termo ( OP termo )*
+expr : termo ( 
+		OP {
+			_exprContent += _input.LT(-1).getText();
+		} 
+		termo )*
 	 ;
 	 
-termo:  ID {variableValidate(_input.LT(-1).getText());} 
-		| NUMBER
+termo:  ID {variableValidate(_input.LT(-1).getText());
+			_exprContent += _input.LT(-1).getText();
+		} 
+		| NUMBER{
+			_exprContent += _input.LT(-1).getText();
+		}
      ;
      
 AP: '('

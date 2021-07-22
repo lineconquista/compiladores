@@ -13,4 +13,9 @@ public class CommandLeitura extends AbstractCommand {
 	public String generateJavaCode() {
 		return null;
 	}
+	
+	@Override
+	public String toString() {
+		return "CommandLeitura [id="+ id + "]";
+	}
 }

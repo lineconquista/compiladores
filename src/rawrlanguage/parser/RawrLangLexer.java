@@ -6,10 +6,13 @@ package rawrlanguage.parser;
 	import datastructures.RawrSymbolTable;
 	import exceptions.RawrSemanticException;
 	import java.util.ArrayList;
+	import java.util.Stack;
 	import ast.AbstractCommand;
 	import ast.RawrProgram;
 	import ast.CommandLeitura;
 	import ast.CommandEscrita;
+	import ast.CommandAtribuicao;
+	import ast.CommandDecisao;
 
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
@@ -103,9 +106,15 @@ public class RawrLangLexer extends Lexer {
 		private RawrSymbolTable symbolTable = new RawrSymbolTable();
 		private RawrSymbol symbol;
 		private RawrProgram program = new RawrProgram();
-		private ArrayList <AbstractCommand> curThread = new ArrayList<AbstractCommand>();
+		private ArrayList <AbstractCommand> curThread;
 		private String _readId;
 		private String _writeId;
+		private String _exprId;
+		private String _exprContent;
+		private String _exprDecision;
+		private Stack<ArrayList<AbstractCommand>> stack = new Stack <ArrayList<AbstractCommand>>();
+		private ArrayList<AbstractCommand> listaTrue;
+		private ArrayList<AbstractCommand> listaFalse;
 		
 		public void variableValidate(String id){
 		
