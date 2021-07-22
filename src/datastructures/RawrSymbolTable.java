@@ -1,4 +1,5 @@
 package datastructures;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class RawrSymbolTable {
@@ -17,4 +18,13 @@ public class RawrSymbolTable {
 	public RawrSymbol get(String symbolName) {
 		return map.get(symbolName);
 	}
+
+	public ArrayList <RawrSymbol> getAll(){
+		ArrayList <RawrSymbol> lista = new ArrayList <RawrSymbol>();
+		for (RawrSymbol symbol: map.values()) {
+			lista.add(symbol);
+		}
+		return lista;
+	}
 }
+

@@ -32,4 +32,19 @@ public class RawrVariable extends RawrSymbol{
 	public String toString() {
 		return "RawrVariable [name="+name+", type=" + type + ", value="+value;
 	}
+	
+	@Override
+	public String generateJavaCode () {
+		String str;
+		if(type == NUMBER) {
+			str = "double";
+			
+		} else {
+			str = "String";
+		}
+		
+		return str + " " + super.name + ";";
+	
+	}
+	 
 }

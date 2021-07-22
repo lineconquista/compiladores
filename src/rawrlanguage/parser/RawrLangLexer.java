@@ -128,6 +128,10 @@ public class RawrLangLexer extends Lexer {
 				System.out.println(c);
 			}
 		}
+		
+		public void generateCode(){
+			program.generateTarget();
+		}
 
 
 	public RawrLangLexer(CharStream input) {

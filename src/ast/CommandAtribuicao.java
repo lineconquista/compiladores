@@ -1,6 +1,5 @@
 package ast;
 
-
 public class CommandAtribuicao extends AbstractCommand {
 	
 	private String id;
@@ -13,7 +12,7 @@ public class CommandAtribuicao extends AbstractCommand {
 	
 	@Override
 	public String generateJavaCode() {
-		return null;
+		return id + " =" +expr+";" ;
 	}
 	
 	@Override

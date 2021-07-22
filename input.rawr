@@ -5,11 +5,11 @@ start:
 	read(a);
 	read(b);
 	write(a);
-	t1 = 2
+	b = 2
 	a = 1 + 2 * 3
 	
-	se ( t1 == 1 ) {
-		write(t1)
+	se ( b == 4 ) {
+		write(b)
 	}
 	senao {
 		read(a)

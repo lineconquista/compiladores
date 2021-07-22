@@ -43,10 +43,15 @@ grammar RawrLang;
 			System.out.println(c);
 		}
 	}
+	
+	public void generateCode(){
+		program.generateTarget();
+	}
 }
 
 prog : 'start:' decl bloco  'end'  
-		{program.setComandos(stack.pop());
+		{	program.setVarTable(symbolTable);
+			program.setComandos(stack.pop());
 		 }
 	 ;
 
@@ -98,7 +103,8 @@ cmdleitura : 'read' AP
 					FP 
 					SC?
 			 {
-			 	CommandLeitura cmd = new CommandLeitura(_readId);
+			 	RawrVariable var = (RawrVariable) symbolTable.get(_readId);
+			 	CommandLeitura cmd = new CommandLeitura(_readId, var);
 				stack.peek().add(cmd);
 			 }
            ;

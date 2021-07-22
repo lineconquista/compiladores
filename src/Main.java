@@ -20,6 +20,7 @@ public class Main {
 			parser.prog();
 			System.out.print("compilado!!!");
 			parser.exibeComandos();
+			parser.generateCode();
 			
 		}catch(RawrSemanticException ex){
 			System.err.print("Semantic error: "+ex.getMessage());

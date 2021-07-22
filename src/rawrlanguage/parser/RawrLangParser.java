@@ -135,6 +135,10 @@ public class RawrLangParser extends Parser {
 				System.out.println(c);
 			}
 		}
+		
+		public void generateCode(){
+			program.generateTarget();
+		}
 
 	public RawrLangParser(TokenStream input) {
 		super(input);
@@ -176,7 +180,8 @@ public class RawrLangParser extends Parser {
 			bloco();
 			setState(27);
 			match(T__1);
-			program.setComandos(stack.pop());
+				program.setVarTable(symbolTable);
+						program.setComandos(stack.pop());
 					 
 			}
 		}
@@ -580,7 +585,8 @@ public class RawrLangParser extends Parser {
 			}
 
 
-						 	CommandLeitura cmd = new CommandLeitura(_readId);
+						 	RawrVariable var = (RawrVariable) symbolTable.get(_readId);
+						 	CommandLeitura cmd = new CommandLeitura(_readId, var);
 							stack.peek().add(cmd);
 						 
 			}
