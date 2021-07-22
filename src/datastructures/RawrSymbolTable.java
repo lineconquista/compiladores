@@ -3,10 +3,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class RawrSymbolTable {
+	
 	private HashMap<String, RawrSymbol> map;
+	
 	public RawrSymbolTable() {
 		map = new HashMap<String, RawrSymbol>();
 	}
+	
 	public void add (RawrSymbol symbol) {
 		map.put(symbol.getName(), symbol);
 	}
@@ -20,11 +23,11 @@ public class RawrSymbolTable {
 	}
 
 	public ArrayList <RawrSymbol> getAll(){
-		ArrayList <RawrSymbol> lista = new ArrayList <RawrSymbol>();
+		ArrayList <RawrSymbol> list = new ArrayList <RawrSymbol>();
 		for (RawrSymbol symbol: map.values()) {
-			lista.add(symbol);
+			list.add(symbol);
 		}
-		return lista;
+		return list;
 	}
 }
 

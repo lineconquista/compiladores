@@ -1,6 +1,7 @@
 package datastructures;
 
 public class RawrVariable extends RawrSymbol{
+	
 	public static final int NUMBER = 0;
 	public static final int TEXT = 1;
 	private int type;
@@ -29,22 +30,9 @@ public class RawrVariable extends RawrSymbol{
 	}
 	
 	@Override
-	public String toString() {
-		return "RawrVariable [name="+name+", type=" + type + ", value="+value;
-	}
-	
-	@Override
 	public String generateJavaCode () {
-		String str;
-		if(type == NUMBER) {
-			str = "double";
-			
-		} else {
-			str = "String";
-		}
-		
+		String str = type==NUMBER? "double" : "String";
 		return str + " " + super.name + ";";
-	
 	}
 	 
 }

@@ -1,7 +1,9 @@
 package datastructures;
 
 public abstract class RawrSymbol {
+	
 	protected String name;
+	
 	public abstract String generateJavaCode();
 	
 	public RawrSymbol(String name) {
@@ -12,10 +14,5 @@ public abstract class RawrSymbol {
 	}
 	public void setName (String name) {
 		this.name = name;
-	}
-	
-	@Override
-	public String toString() {
-		return "RawrSymbol [name="+name+"]";
 	}
 }
