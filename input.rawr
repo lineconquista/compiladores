@@ -1,9 +1,7 @@
 start:
 
-	number a, b;
 	text c;
-	c = a
-	a = 1 + 2 * 3
-	write(ab);
+	c = "hello world!";
+	write(c);
    
 end;

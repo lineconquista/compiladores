@@ -167,7 +167,8 @@ term:  ID {
 				variableValidate(_input.LT(-1).getText());
 				_exprContent += _input.LT(-1).getText();
 		   } 
-		| NUMBER{_exprContent += _input.LT(-1).getText();};
+		| NUMBER{_exprContent += _input.LT(-1).getText();}
+		| TEXT{_exprContent += _input.LT(-1).getText();};
      
 AP: '(';
   
@@ -190,5 +191,6 @@ VIR: ',';
 ID : [a-z]([a-z]|[A-Z]|[0-9])*;
    
 NUMBER: [0-9]+ ('.' [0-9]+)?;
+TEXT: ["]~["]*["];
       
 WS: (' ' | '\t' | '\n' | '\r') -> skip;
