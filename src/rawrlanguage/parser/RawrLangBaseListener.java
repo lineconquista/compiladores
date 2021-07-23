@@ -1,18 +1,11 @@
 // Generated from RawrLang.g4 by ANTLR 4.9.2
 package rawrlanguage.parser;
 
-	import datastructures.RawrSymbol;
-	import datastructures.RawrVariable;
-	import datastructures.RawrSymbolTable;
-	import exceptions.RawrSemanticException;
 	import java.util.ArrayList;
 	import java.util.Stack;
-	import ast.AbstractCommand;
-	import ast.RawrProgram;
-	import ast.CommandRead;
-	import ast.CommandWrite;
-	import ast.CommandAttrib;
-	import ast.CommandConditional;
+	import ast.*;
+	import datastructures.*;
+	import exceptions.*;
 
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -97,6 +90,54 @@ public class RawrLangBaseListener implements RawrLangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitCmd(RawrLangParser.CmdContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCmdloop(RawrLangParser.CmdloopContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCmdloop(RawrLangParser.CmdloopContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCmdloop1(RawrLangParser.Cmdloop1Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCmdloop1(RawrLangParser.Cmdloop1Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCmdloop2(RawrLangParser.Cmdloop2Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCmdloop2(RawrLangParser.Cmdloop2Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCmdloop3(RawrLangParser.Cmdloop3Context ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCmdloop3(RawrLangParser.Cmdloop3Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

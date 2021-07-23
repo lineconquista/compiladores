@@ -1,7 +1,22 @@
 start:
 
-	text c;
-	c = "hello world!";
-	write(c);
+	number a, b;
+    b=3;
+    a = 1 + b;
+    write(a);
    
+   	enquanto(a>b){
+		b=b+1;
+		write(a);
+	}
+	
+	faca{
+		a=a+1;
+		write(a);
+	} enquanto(a<8);
+	
+	para(a=0; a<12; a=a+1){
+		write(a);
+	}
+	
 end;
