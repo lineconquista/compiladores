@@ -1,18 +1,11 @@
 // Generated from RawrLang.g4 by ANTLR 4.9.2
 package rawrlanguage.parser;
 
-	import datastructures.RawrSymbol;
-	import datastructures.RawrVariable;
-	import datastructures.RawrSymbolTable;
-	import exceptions.RawrSemanticException;
 	import java.util.ArrayList;
 	import java.util.Stack;
-	import ast.AbstractCommand;
-	import ast.RawrProgram;
-	import ast.CommandRead;
-	import ast.CommandWrite;
-	import ast.CommandAttrib;
-	import ast.CommandConditional;
+	import ast.*;
+	import datastructures.*;
+	import exceptions.*;
 
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -81,6 +74,46 @@ public interface RawrLangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitCmd(RawrLangParser.CmdContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RawrLangParser#cmdloop}.
+	 * @param ctx the parse tree
+	 */
+	void enterCmdloop(RawrLangParser.CmdloopContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RawrLangParser#cmdloop}.
+	 * @param ctx the parse tree
+	 */
+	void exitCmdloop(RawrLangParser.CmdloopContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RawrLangParser#cmdloop1}.
+	 * @param ctx the parse tree
+	 */
+	void enterCmdloop1(RawrLangParser.Cmdloop1Context ctx);
+	/**
+	 * Exit a parse tree produced by {@link RawrLangParser#cmdloop1}.
+	 * @param ctx the parse tree
+	 */
+	void exitCmdloop1(RawrLangParser.Cmdloop1Context ctx);
+	/**
+	 * Enter a parse tree produced by {@link RawrLangParser#cmdloop2}.
+	 * @param ctx the parse tree
+	 */
+	void enterCmdloop2(RawrLangParser.Cmdloop2Context ctx);
+	/**
+	 * Exit a parse tree produced by {@link RawrLangParser#cmdloop2}.
+	 * @param ctx the parse tree
+	 */
+	void exitCmdloop2(RawrLangParser.Cmdloop2Context ctx);
+	/**
+	 * Enter a parse tree produced by {@link RawrLangParser#cmdloop3}.
+	 * @param ctx the parse tree
+	 */
+	void enterCmdloop3(RawrLangParser.Cmdloop3Context ctx);
+	/**
+	 * Exit a parse tree produced by {@link RawrLangParser#cmdloop3}.
+	 * @param ctx the parse tree
+	 */
+	void exitCmdloop3(RawrLangParser.Cmdloop3Context ctx);
 	/**
 	 * Enter a parse tree produced by {@link RawrLangParser#cmd_read}.
 	 * @param ctx the parse tree

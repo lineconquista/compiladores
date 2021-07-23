@@ -30,4 +30,3 @@ public class RawrSymbolTable {
 		return list;
 	}
 }
-

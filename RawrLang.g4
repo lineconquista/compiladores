@@ -1,18 +1,11 @@
 grammar RawrLang; 
 
 @header{
-	import datastructures.RawrSymbol;
-	import datastructures.RawrVariable;
-	import datastructures.RawrSymbolTable;
-	import exceptions.RawrSemanticException;
 	import java.util.ArrayList;
 	import java.util.Stack;
-	import ast.AbstractCommand;
-	import ast.RawrProgram;
-	import ast.CommandRead;
-	import ast.CommandWrite;
-	import ast.CommandAttrib;
-	import ast.CommandConditional;
+	import ast.*;
+	import datastructures.*;
+	import exceptions.*;
 }
 
 @members{
@@ -25,10 +18,12 @@ grammar RawrLang;
 	private String _exprId;
 	private String _exprContent;
 	private String _exprDecision;
+	private String _exprRepetition;
 	private RawrSymbolTable symbolTable = new RawrSymbolTable();
 	private RawrSymbol symbol;
 	private RawrProgram program = new RawrProgram();
 	private ArrayList <AbstractCommand> curThread;
+	private ArrayList<AbstractCommand> loopList;
 	private ArrayList<AbstractCommand> listTrue;
 	private ArrayList<AbstractCommand> listFalse;
 	private Stack<ArrayList<AbstractCommand>> stack = new Stack <ArrayList<AbstractCommand>>();
@@ -38,6 +33,11 @@ grammar RawrLang;
 		if (!symbolTable.exists(id)){
 			throw new RawrSemanticException ("Variable "+id+" not declared");
 		}
+	}
+	public void variableValidateValue(String id){
+		RawrVariable var = (RawrVariable) symbolTable.get(id);
+		String x = var.getValue();
+		System.out.println(x);
 	}
 	
 	public void exibeComandos(){
@@ -100,9 +100,147 @@ code : {
 cmd	: cmd_read
 	  |cmd_write
 	  |cmd_attrib 
-	  |cmd_conditional;
-    
-cmd_read: 'read' AP ID {
+	  |cmd_conditional
+	  |cmdloop;
+
+cmdloop : cmdloop1
+		| cmdloop2
+		| cmdloop3
+		;
+
+cmdloop1	: 'enquanto'AP
+						ID
+						{
+							_exprRepetition = _input.LT(-1).getText();
+						}
+						OPREL
+						{
+							_exprRepetition += _input.LT(-1).getText();
+						}
+						(ID|NUMBER)
+						{
+							_exprRepetition += _input.LT(-1).getText();
+						}
+						FP
+						ACH
+						{
+							curThread = new ArrayList<AbstractCommand>();
+							stack.push(curThread);
+						}
+						(cmd)+
+						FCH
+						{
+							loopList = new ArrayList<AbstractCommand>();
+							loopList = stack.pop();
+							CommandRepetition cmd = new CommandRepetition(_exprRepetition, loopList, 1);
+							stack.peek().add(cmd);
+						}
+			;
+
+cmdloop2	: 'faca'	ACH
+						{
+							curThread = new ArrayList<AbstractCommand>();
+							stack.push(curThread);
+						}
+						(cmd)+
+						FCH
+						{
+							loopList = new ArrayList<AbstractCommand>();
+							loopList = stack.pop();
+						}
+			  
+			  'enquanto'AP
+					 	ID
+					 	{
+					 		_exprRepetition = _input.LT(-1).getText();
+					 	}
+					 	OPREL
+					 	{
+					 		_exprRepetition += _input.LT(-1).getText();
+					 	}
+					 	(ID|NUMBER)
+					 	{
+					 		_exprRepetition += _input.LT(-1).getText();
+					 	}
+					 	FP
+					 	SC
+					 	{
+					 		CommandRepetition cmd = new CommandRepetition(_exprRepetition, loopList, 2);
+							stack.peek().add(cmd);
+					 	}
+			;
+
+cmdloop3	: 'para'	AP
+						ID
+						{
+							_exprRepetition = _input.LT(-1).getText();
+						}
+						ATTR
+						{
+							_exprRepetition += _input.LT(-1).getText();
+						}
+						(ID|NUMBER)
+						{
+							_exprRepetition += _input.LT(-1).getText();
+						}
+						SC
+						{
+							_exprRepetition += _input.LT(-1).getText();
+						}
+						ID
+						{
+							_exprRepetition += _input.LT(-1).getText();
+						}
+						OPREL
+						{
+							_exprRepetition += _input.LT(-1).getText();
+						}
+						(ID|NUMBER)
+						{
+							_exprRepetition += _input.LT(-1).getText();
+						}
+						SC
+						{
+							_exprRepetition += _input.LT(-1).getText();
+						}
+						ID
+						{
+							_exprRepetition += _input.LT(-1).getText();
+						}
+						ATTR
+						{
+							_exprRepetition += _input.LT(-1).getText();
+						}
+						ID
+						{
+							_exprRepetition += _input.LT(-1).getText();
+						}
+						OP
+						{
+							_exprRepetition += _input.LT(-1).getText();
+						}
+						(ID|NUMBER)
+						{
+							_exprRepetition += _input.LT(-1).getText();
+						}
+						FP
+						ACH
+						{
+							curThread = new ArrayList<AbstractCommand>();
+							stack.push(curThread);
+						}
+						(cmd)+
+						FCH
+						{
+							loopList = new ArrayList<AbstractCommand>();
+							loopList = stack.pop();
+							CommandRepetition cmd = new CommandRepetition(_exprRepetition, loopList, 3);
+							stack.peek().add(cmd);
+						}
+			;
+
+cmd_read: 'read' AP 
+				 ID {
 							variableValidate(_input.LT(-1).getText());
 							_readId = _input.LT(-1).getText();
 						 }
@@ -113,10 +251,21 @@ cmd_read: 'read' AP ID {
 				stack.peek().add(cmd);
 			};
  
-cmd_write : 'write' AP ID {
-								variableValidate(_input.LT(-1).getText());
-								_writeId = _input.LT(-1).getText();
-						   }
+cmd_write : 'write' AP 
+					(ID 
+					{
+						variableValidate(_input.LT(-1).getText());
+						_writeId = _input.LT(-1).getText();
+					}
+					|NUMBER
+					{
+						_writeId = _input.LT(-1).getText();
+					}
+					|TEXT
+					{
+						_writeId = _input.LT(-1).getText();
+					}
+					)
 			 FP SC?
 			 {
 			 	CommandWrite cmd = new CommandWrite(_writeId);
@@ -165,6 +314,7 @@ expr : term (
 	 
 term:  ID {
 				variableValidate(_input.LT(-1).getText());
+				variableValidateValue(_input.LT(-1).getText());
 				_exprContent += _input.LT(-1).getText();
 		   } 
 		| NUMBER{_exprContent += _input.LT(-1).getText();}
@@ -191,6 +341,6 @@ VIR: ',';
 ID : [a-z]([a-z]|[A-Z]|[0-9])*;
    
 NUMBER: [0-9]+ ('.' [0-9]+)?;
-TEXT: ["]~["]*["];
+TEXT:   ["]~["]*["];
       
 WS: (' ' | '\t' | '\n' | '\r') -> skip;
