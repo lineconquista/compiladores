@@ -1,7 +1,8 @@
 start:
 
-	text c;
+	text c, d;
 	c = "hello world!";
 	write(c);
+	write(d);
    
 end;
