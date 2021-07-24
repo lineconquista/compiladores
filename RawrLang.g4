@@ -35,10 +35,21 @@ grammar RawrLang;
 		}
 	}
 	public void variableValidateValue(String id){
-		RawrVariable var = (RawrVariable) symbolTable.get(id);
-		String x = var.getValue();
-		System.out.println(x);
+		String value = ((RawrVariable) symbolTable.get(id)).getValue();
+		if(value==null){
+			throw new RawrSemanticException ("Variable "+id+" is not assigned");
+		}
 	}
+	
+	public void variableValidateType(String id, int type_enum){
+		int type = ((RawrVariable) symbolTable.get(id)).getType();
+		if(type!=type_enum){
+			throw new RawrSemanticException ("Variable "+id+" is not assigned to type "+ type_enum);
+		}
+	}
+	
+	
+	
 	
 	public void exibeComandos(){
 		for(AbstractCommand c: program.getCommands()){
@@ -255,6 +266,7 @@ cmd_write : 'write' AP
 					(ID 
 					{
 						variableValidate(_input.LT(-1).getText());
+						variableValidateValue(_input.LT(-1).getText());
 						_writeId = _input.LT(-1).getText();
 					}
 					|NUMBER
@@ -279,7 +291,7 @@ cmd_attrib : ID {
 			ATTR {_exprContent = "";}
 			expr SC?
 			{
-				CommandAttrib cmd = new CommandAttrib (_exprId, _exprContent);
+				CommandAttrib cmd = new CommandAttrib (_exprId, _exprContent, symbolTable);
 				stack.peek().add(cmd);
 			};
           
@@ -315,10 +327,15 @@ expr : term (
 term:  ID {
 				variableValidate(_input.LT(-1).getText());
 				variableValidateValue(_input.LT(-1).getText());
+				variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
 				_exprContent += _input.LT(-1).getText();
 		   } 
-		| NUMBER{_exprContent += _input.LT(-1).getText();}
-		| TEXT{_exprContent += _input.LT(-1).getText();};
+		| NUMBER
+		{	variableValidateType(_exprId, 0);
+			_exprContent += _input.LT(-1).getText();}
+		| TEXT
+		{	variableValidateType(_exprId, 1);
+			_exprContent += _input.LT(-1).getText();};
      
 AP: '(';
   

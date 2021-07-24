@@ -129,10 +129,21 @@ public class RawrLangParser extends Parser {
 			}
 		}
 		public void variableValidateValue(String id){
-			RawrVariable var = (RawrVariable) symbolTable.get(id);
-			String x = var.getValue();
-			System.out.println(x);
+			String value = ((RawrVariable) symbolTable.get(id)).getValue();
+			if(value==null){
+				throw new RawrSemanticException ("Variable "+id+" is not assigned");
+			}
 		}
+		
+		public void variableValidateType(String id, int type_enum){
+			int type = ((RawrVariable) symbolTable.get(id)).getType();
+			if(type!=type_enum){
+				throw new RawrSemanticException ("Variable "+id+" is not assigned to type "+ type_enum);
+			}
+		}
+		
+		
+		
 		
 		public void exibeComandos(){
 			for(AbstractCommand c: program.getCommands()){
@@ -1142,6 +1153,7 @@ public class RawrLangParser extends Parser {
 				match(ID);
 
 										variableValidate(_input.LT(-1).getText());
+										variableValidateValue(_input.LT(-1).getText());
 										_writeId = _input.LT(-1).getText();
 									
 				}
@@ -1246,7 +1258,7 @@ public class RawrLangParser extends Parser {
 			}
 
 
-							CommandAttrib cmd = new CommandAttrib (_exprId, _exprContent);
+							CommandAttrib cmd = new CommandAttrib (_exprId, _exprContent, symbolTable);
 							stack.peek().add(cmd);
 						
 			}
@@ -1501,6 +1513,7 @@ public class RawrLangParser extends Parser {
 
 								variableValidate(_input.LT(-1).getText());
 								variableValidateValue(_input.LT(-1).getText());
+								variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
 								_exprContent += _input.LT(-1).getText();
 						   
 				}
@@ -1510,7 +1523,8 @@ public class RawrLangParser extends Parser {
 				{
 				setState(239);
 				match(NUMBER);
-				_exprContent += _input.LT(-1).getText();
+					variableValidateType(_exprId, 0);
+							_exprContent += _input.LT(-1).getText();
 				}
 				break;
 			case TEXT:
@@ -1518,7 +1532,8 @@ public class RawrLangParser extends Parser {
 				{
 				setState(241);
 				match(TEXT);
-				_exprContent += _input.LT(-1).getText();
+					variableValidateType(_exprId, 1);
+							_exprContent += _input.LT(-1).getText();
 				}
 				break;
 			default:

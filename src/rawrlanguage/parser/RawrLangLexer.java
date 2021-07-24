@@ -120,10 +120,21 @@ public class RawrLangLexer extends Lexer {
 			}
 		}
 		public void variableValidateValue(String id){
-			RawrVariable var = (RawrVariable) symbolTable.get(id);
-			String x = var.getValue();
-			System.out.println(x);
+			String value = ((RawrVariable) symbolTable.get(id)).getValue();
+			if(value==null){
+				throw new RawrSemanticException ("Variable "+id+" is not assigned");
+			}
 		}
+		
+		public void variableValidateType(String id, int type_enum){
+			int type = ((RawrVariable) symbolTable.get(id)).getType();
+			if(type!=type_enum){
+				throw new RawrSemanticException ("Variable "+id+" is not assigned to type "+ type_enum);
+			}
+		}
+		
+		
+		
 		
 		public void exibeComandos(){
 			for(AbstractCommand c: program.getCommands()){
