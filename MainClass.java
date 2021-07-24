@@ -4,6 +4,9 @@ public class MainClass{
 	Scanner _key = new Scanner(System.in);
 double a;
 double b;
-String d;
-d= _key.nextLine();
+b =6;
+a =3;
+while (b>a) {
+a =a+1;System.out.println(a);}
+
 	}}

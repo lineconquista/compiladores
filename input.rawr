@@ -1,8 +1,14 @@
 start:
 
 	number a, b;
-	text d
-	read(a)
+	b = 6
+	a = 3
 		
+	enquanto(b>a){
+		a = a + 1
+		write(a)
+	
+	
+	}
 	
 end;

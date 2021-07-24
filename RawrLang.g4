@@ -34,6 +34,7 @@ grammar RawrLang;
 			throw new RawrSemanticException ("Variable "+id+" not declared");
 		}
 	}
+	
 	public void variableValidateValue(String id){
 		String value = ((RawrVariable) symbolTable.get(id)).getValue();
 		if(value==null){
@@ -47,9 +48,6 @@ grammar RawrLang;
 			throw new RawrSemanticException ("Variable "+id+" is not assigned to type "+ type_enum);
 		}
 	}
-	
-	
-	
 	
 	public void exibeComandos(){
 		for(AbstractCommand c: program.getCommands()){
@@ -119,16 +117,18 @@ cmdloop : cmdloop1
 		| cmdloop3
 		;
 
-cmdloop1	: 'enquanto'AP
+cmdloop1	: 'while'AP
 						ID
 						{
+							variableValidateValue(_input.LT(-1).getText());
 							_exprRepetition = _input.LT(-1).getText();
+							
 						}
 						OPREL
 						{
 							_exprRepetition += _input.LT(-1).getText();
 						}
-						(ID|NUMBER)
+						(ID {variableValidateValue(_input.LT(-1).getText());}|NUMBER)
 						{
 							_exprRepetition += _input.LT(-1).getText();
 						}
@@ -148,7 +148,7 @@ cmdloop1	: 'enquanto'AP
 						}
 			;
 
-cmdloop2	: 'faca'	ACH
+cmdloop2	: 'do'	ACH
 						{
 							curThread = new ArrayList<AbstractCommand>();
 							stack.push(curThread);
@@ -160,16 +160,18 @@ cmdloop2	: 'faca'	ACH
 							loopList = stack.pop();
 						}
 			  
-			  'enquanto'AP
+			  'while'AP
 					 	ID
 					 	{
+					 		variableValidateValue(_input.LT(-1).getText());
 					 		_exprRepetition = _input.LT(-1).getText();
+					 		
 					 	}
 					 	OPREL
 					 	{
 					 		_exprRepetition += _input.LT(-1).getText();
 					 	}
-					 	(ID|NUMBER)
+					 	(ID {variableValidateValue(_input.LT(-1).getText());}|NUMBER)
 					 	{
 					 		_exprRepetition += _input.LT(-1).getText();
 					 	}
@@ -181,16 +183,18 @@ cmdloop2	: 'faca'	ACH
 					 	}
 			;
 
-cmdloop3	: 'para'	AP
+cmdloop3	: 'for'	AP
 						ID
 						{
+							variableValidateValue(_input.LT(-1).getText());
 							_exprRepetition = _input.LT(-1).getText();
+							
 						}
 						ATTR
 						{
 							_exprRepetition += _input.LT(-1).getText();
 						}
-						(ID|NUMBER)
+						(ID{variableValidateValue(_input.LT(-1).getText());}|NUMBER)
 						{
 							_exprRepetition += _input.LT(-1).getText();
 						}
@@ -200,13 +204,14 @@ cmdloop3	: 'para'	AP
 						}
 						ID
 						{
+							variableValidateValue(_input.LT(-1).getText());
 							_exprRepetition += _input.LT(-1).getText();
 						}
 						OPREL
 						{
 							_exprRepetition += _input.LT(-1).getText();
 						}
-						(ID|NUMBER)
+						(ID {variableValidateValue(_input.LT(-1).getText());} |NUMBER)
 						{
 							_exprRepetition += _input.LT(-1).getText();
 						}
@@ -216,6 +221,7 @@ cmdloop3	: 'para'	AP
 						}
 						ID
 						{
+							variableValidateValue(_input.LT(-1).getText());
 							_exprRepetition += _input.LT(-1).getText();
 						}
 						ATTR
@@ -224,13 +230,14 @@ cmdloop3	: 'para'	AP
 						}
 						ID
 						{
+							variableValidateValue(_input.LT(-1).getText());
 							_exprRepetition += _input.LT(-1).getText();
 						}
 						OP
 						{
 							_exprRepetition += _input.LT(-1).getText();
 						}
-						(ID|NUMBER)
+						(ID{variableValidateValue(_input.LT(-1).getText());}|NUMBER)
 						{
 							_exprRepetition += _input.LT(-1).getText();
 						}
@@ -297,9 +304,10 @@ cmd_attrib : ID {
           
 cmd_conditional : 'if' 
 			  AP 
-			  ID { _exprDecision = _input.LT(-1).getText(); }
+			  (ID {variableValidateValue(_input.LT(-1).getText()); }| NUMBER | TEXT | expr) { _exprDecision = _input.LT(-1).getText(); }
+			  
 			  OPREL  { _exprDecision += _input.LT(-1).getText(); }
-			  (ID | NUMBER)  { _exprDecision += _input.LT(-1).getText(); }
+			  (ID {variableValidateValue(_input.LT(-1).getText());} | NUMBER)  { _exprDecision += _input.LT(-1).getText(); }
 			  FP 
 			  ACH { 
 			  			curThread = new ArrayList<AbstractCommand>();
