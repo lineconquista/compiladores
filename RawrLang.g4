@@ -295,8 +295,7 @@ cmd_attrib : ID {
 					variableValidate(_input.LT(-1).getText());
 					_exprId = _input.LT(-1).getText();
 				} 
-			ATTR {_exprContent = "";}
-			expr SC?
+			(ATTR  {_exprContent = "";} expr | | ICR  {variableValidateValue(_exprId); _exprContent = _exprId + " + 1";} )  SC?
 			{
 				CommandAttrib cmd = new CommandAttrib (_exprId, _exprContent, symbolTable);
 				stack.peek().add(cmd);
@@ -354,6 +353,8 @@ SC : ';';
 OP : '+' | '-' | '*' | '/';
    
 ATTR : '=';
+
+ICR : '++';
      
 ACH : '{';
 	
@@ -369,3 +370,5 @@ NUMBER: [0-9]+ ('.' [0-9]+)?;
 TEXT:   ["]~["]*["];
       
 WS: (' ' | '\t' | '\n' | '\r') -> skip;
+
+CM: 's2';
