@@ -256,6 +256,7 @@ cmd_write : 'write' AP
 					(ID 
 					{
 						variableValidate(_input.LT(-1).getText());
+						variableValidateValue(_input.LT(-1).getText());
 						_writeId = _input.LT(-1).getText();
 					}
 					|NUMBER

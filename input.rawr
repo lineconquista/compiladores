@@ -1,8 +1,8 @@
 start:
 
 	number a, b
-    a = 1 + b;
-    write(a);
+    a = 1;
+    write(3);
    
   
 	

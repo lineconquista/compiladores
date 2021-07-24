@@ -1143,6 +1143,7 @@ public class RawrLangParser extends Parser {
 				match(ID);
 
 										variableValidate(_input.LT(-1).getText());
+										variableValidateValue(_input.LT(-1).getText());
 										_writeId = _input.LT(-1).getText();
 									
 				}
