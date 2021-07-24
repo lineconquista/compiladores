@@ -41,6 +41,16 @@ grammar RawrLang;
 		}
 	}
 	
+	public void variableValidateType(String id, int type_enum){
+		int type = ((RawrVariable) symbolTable.get(id)).getType();
+		if(type!=type_enum){
+			throw new RawrSemanticException ("Variable "+id+" is not assigned to type "+ type_enum);
+		}
+	}
+	
+	
+	
+	
 	public void exibeComandos(){
 		for(AbstractCommand c: program.getCommands()){
 			System.out.println(c);
@@ -319,8 +329,12 @@ term:  ID {
 				variableValidateValue(_input.LT(-1).getText());
 				_exprContent += _input.LT(-1).getText();
 		   } 
-		| NUMBER{_exprContent += _input.LT(-1).getText();}
-		| TEXT{_exprContent += _input.LT(-1).getText();};
+		| NUMBER
+		{	variableValidateType(_exprId, 0);
+			_exprContent += _input.LT(-1).getText();}
+		| TEXT
+		{	variableValidateType(_exprId, 1);
+			_exprContent += _input.LT(-1).getText();};
      
 AP: '(';
   

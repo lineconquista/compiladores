@@ -1,9 +1,9 @@
 start:
 
-	number a, b
-    a = 1;
+	number a, b;
+	text d
+	d = "o"
+    a = 1 + d;
     write(3);
-   
-  
 	
 end;

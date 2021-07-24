@@ -135,6 +135,16 @@ public class RawrLangParser extends Parser {
 			}
 		}
 		
+		public void variableValidateType(String id, int type_enum){
+			int type = ((RawrVariable) symbolTable.get(id)).getType();
+			if(type!=type_enum){
+				throw new RawrSemanticException ("Variable "+id+" is not assigned to type "+ type_enum);
+			}
+		}
+		
+		
+		
+		
 		public void exibeComandos(){
 			for(AbstractCommand c: program.getCommands()){
 				System.out.println(c);
@@ -1512,7 +1522,8 @@ public class RawrLangParser extends Parser {
 				{
 				setState(239);
 				match(NUMBER);
-				_exprContent += _input.LT(-1).getText();
+					variableValidateType(_exprId, 0);
+							_exprContent += _input.LT(-1).getText();
 				}
 				break;
 			case TEXT:
@@ -1520,7 +1531,8 @@ public class RawrLangParser extends Parser {
 				{
 				setState(241);
 				match(TEXT);
-				_exprContent += _input.LT(-1).getText();
+					variableValidateType(_exprId, 1);
+							_exprContent += _input.LT(-1).getText();
 				}
 				break;
 			default:

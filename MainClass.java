@@ -4,6 +4,8 @@ public class MainClass{
 	Scanner _key = new Scanner(System.in);
 double a;
 double b;
-a =1;
+String d;
+d ="o";
+a =1+d;
 System.out.println(3);
 	}}
