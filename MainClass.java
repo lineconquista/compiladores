@@ -5,7 +5,5 @@ public class MainClass{
 double a;
 double b;
 String d;
-d ="o";
-a =1+d;
-System.out.println(3);
+d= _key.nextLine();
 	}}

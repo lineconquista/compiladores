@@ -327,6 +327,7 @@ expr : term (
 term:  ID {
 				variableValidate(_input.LT(-1).getText());
 				variableValidateValue(_input.LT(-1).getText());
+				variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
 				_exprContent += _input.LT(-1).getText();
 		   } 
 		| NUMBER
