@@ -1,8 +1,9 @@
 start:
 
-	number a, b;
-	text d
-	read(a)
+	number a;
+	a++
+	write(a)
 		
+
 	
 end;

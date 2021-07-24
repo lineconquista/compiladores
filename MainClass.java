@@ -3,7 +3,7 @@ public class MainClass{
 	public static void main (String args[]){ 
 	Scanner _key = new Scanner(System.in);
 double a;
-double b;
-String d;
-d= _key.nextLine();
+a =2;
+a =a + 1;
+System.out.println(a);
 	}}
