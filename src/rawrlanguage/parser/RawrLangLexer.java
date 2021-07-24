@@ -120,9 +120,10 @@ public class RawrLangLexer extends Lexer {
 			}
 		}
 		public void variableValidateValue(String id){
-			RawrVariable var = (RawrVariable) symbolTable.get(id);
-			String x = var.getValue();
-			System.out.println(x);
+			String value = ((RawrVariable) symbolTable.get(id)).getValue();
+			if(value==null){
+				throw new RawrSemanticException ("Variable "+id+" is not assigned");
+			}
 		}
 		
 		public void exibeComandos(){

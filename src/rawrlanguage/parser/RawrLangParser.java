@@ -129,9 +129,10 @@ public class RawrLangParser extends Parser {
 			}
 		}
 		public void variableValidateValue(String id){
-			RawrVariable var = (RawrVariable) symbolTable.get(id);
-			String x = var.getValue();
-			System.out.println(x);
+			String value = ((RawrVariable) symbolTable.get(id)).getValue();
+			if(value==null){
+				throw new RawrSemanticException ("Variable "+id+" is not assigned");
+			}
 		}
 		
 		public void exibeComandos(){
@@ -1246,7 +1247,7 @@ public class RawrLangParser extends Parser {
 			}
 
 
-							CommandAttrib cmd = new CommandAttrib (_exprId, _exprContent);
+							CommandAttrib cmd = new CommandAttrib (_exprId, _exprContent, symbolTable);
 							stack.peek().add(cmd);
 						
 			}
