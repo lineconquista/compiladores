@@ -1,9 +1,11 @@
 start:
 
-	number a;
+	number a, b;
+	b=$aaaaaaaaaaaaaaaaa$1;
+	a=2; $ testeeee 92107u49 wjek{}{}P{;;;$
 	a++
-	write(a)
-		
+	write(a) $ aaaaaa $
 
+	$teste$
 	
 end;

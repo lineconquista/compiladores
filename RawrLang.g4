@@ -11,6 +11,8 @@ grammar RawrLang;
 @members{
 	
 	private int _type;
+	private char _tempChar;
+	private String _tempNote;
 	private String _varName;
 	private String _varValue;
 	private String _readId;
@@ -58,66 +60,90 @@ grammar RawrLang;
 	public void generateCode(){
 		program.generateTarget();
 	}
-	
 }
 
-prog : 'start:' decl code  'end'  
-		{	
-			program.setVarTable(symbolTable);
-			program.setCommands(stack.pop());
-		};
-	 
-decl: (decl_var)+;
-	
-decl_var : type 
-           ID {
-					_varName = _input.LT(-1).getText();
-					_varValue = null;
-					symbol = new RawrVariable(_varName, _type, _varValue);
+prog 			: 	'start:' 
+						decl 
+						code  
+					'end'  
+				{	
+					program.setVarTable(symbolTable);
+					program.setCommands(stack.pop());
+				}
+				;
+
+ 
+decl			: 		(decl_var)+
+				;
+
+
+decl_var 		: 		type 
+           				ID 
+           				{
+							_varName = _input.LT(-1).getText();
+							_varValue = null;
+							symbol = new RawrVariable(_varName, _type, _varValue);
 					
-					if(!symbolTable.exists(_varName)){
-						symbolTable.add(symbol);
-						
-					} else {
-						throw new RawrSemanticException("Variable "+ _varName + " already declared");
-					}
-		   		}
-		
-		   (VIR ID {
-						_varName = _input.LT(-1).getText();
-						_varValue = null;
-						symbol = new RawrVariable(_varName, _type,  _varValue);
+							if(!symbolTable.exists(_varName)) {
+								symbolTable.add(symbol);
+							}
+							else {
+								throw new RawrSemanticException("Variable "+ _varName + " already declared");
+							}
+		   				}
+		   				(VIR 
+		   				ID 
+		   				{
+							_varName = _input.LT(-1).getText();
+							_varValue = null;
+							symbol = new RawrVariable(_varName, _type,  _varValue);
 					
-						if(!symbolTable.exists(_varName)){
-							symbolTable.add(symbol);
-							
-						} else {
-							throw new RawrSemanticException("Variable "+ _varName + " already declared");
+							if(!symbolTable.exists(_varName)) {
+								symbolTable.add(symbol);
+							} 
+							else {
+								throw new RawrSemanticException("Variable "+ _varName + " already declared");
+							}
 						}
-					}
-			)* SC?;
+						)*
+						SC?
+				;
 
-type	: 'number' {_type = RawrVariable.NUMBER;}
-	      |'text' {_type = RawrVariable.TEXT;};
 
-code : { 
-		  curThread = new ArrayList<AbstractCommand>();
-		  stack.push(curThread);
-	   }
-	   (cmd)+;
+type			: 	'number' 
+						{
+							_type = RawrVariable.NUMBER;
+						}
+	      			|'text' 
+	      				{
+	      					_type = RawrVariable.TEXT;
+	      				}
+	      		;
 
-cmd	: cmd_read
-	  |cmd_write
-	  |cmd_attrib 
-	  |cmd_conditional
-	  |cmdloop;
 
-cmdloop : cmdloop1
-		| cmdloop2
-		| cmdloop3
-		;
+code 			: 		{ 
+		  					curThread = new ArrayList<AbstractCommand>();
+		  					stack.push(curThread);
+	   					}
+	   					(cmd)+
+	   			;
 
-cmdloop1	: 'while'AP
+
+cmd				: 		cmd_read
+	  					|cmd_write
+	 					|cmd_attrib 
+	  					|cmd_conditional
+	  					|cmd_loop
+	  			;
+
+cmd_loop 		: 		cmdloop1
+						|cmdloop2
+						|cmdloop3
+				;
+
+
+cmdloop1		: 	'while'
+						AP
 						ID
 						{
 							variableValidateValue(_input.LT(-1).getText());
@@ -128,7 +154,12 @@ cmdloop1	: 'while'AP
 						{
 							_exprRepetition += _input.LT(-1).getText();
 						}
-						(ID {variableValidateValue(_input.LT(-1).getText());}|NUMBER)
+						(ID 
+						{
+							variableValidateValue(_input.LT(-1).getText());
+						}
+						|NUMBER
+						)
 						{
 							_exprRepetition += _input.LT(-1).getText();
 						}
@@ -146,9 +177,11 @@ cmdloop1	: 'while'AP
 							CommandRepetition cmd = new CommandRepetition(_exprRepetition, loopList, 1);
 							stack.peek().add(cmd);
 						}
-			;
+				;
 
-cmdloop2	: 'do'	ACH
+
+cmdloop2		: 	'do'	
+						ACH
 						{
 							curThread = new ArrayList<AbstractCommand>();
 							stack.push(curThread);
@@ -160,7 +193,8 @@ cmdloop2	: 'do'	ACH
 							loopList = stack.pop();
 						}
 			  
-			  'while'AP
+			  		'while'
+			  			AP
 					 	ID
 					 	{
 					 		variableValidateValue(_input.LT(-1).getText());
@@ -171,7 +205,12 @@ cmdloop2	: 'do'	ACH
 					 	{
 					 		_exprRepetition += _input.LT(-1).getText();
 					 	}
-					 	(ID {variableValidateValue(_input.LT(-1).getText());}|NUMBER)
+					 	(ID 
+					 	{
+					 		variableValidateValue(_input.LT(-1).getText());
+					 	}
+					 	|NUMBER
+					 	)
 					 	{
 					 		_exprRepetition += _input.LT(-1).getText();
 					 	}
@@ -181,9 +220,10 @@ cmdloop2	: 'do'	ACH
 					 		CommandRepetition cmd = new CommandRepetition(_exprRepetition, loopList, 2);
 							stack.peek().add(cmd);
 					 	}
-			;
+				;
 
-cmdloop3	: 'for'	AP
+cmdloop3		: 	'for'	
+						AP
 						ID
 						{
 							variableValidateValue(_input.LT(-1).getText());
@@ -194,7 +234,12 @@ cmdloop3	: 'for'	AP
 						{
 							_exprRepetition += _input.LT(-1).getText();
 						}
-						(ID{variableValidateValue(_input.LT(-1).getText());}|NUMBER)
+						(ID
+						{
+							variableValidateValue(_input.LT(-1).getText());
+						}
+						|NUMBER
+						)
 						{
 							_exprRepetition += _input.LT(-1).getText();
 						}
@@ -237,7 +282,12 @@ cmdloop3	: 'for'	AP
 						{
 							_exprRepetition += _input.LT(-1).getText();
 						}
-						(ID{variableValidateValue(_input.LT(-1).getText());}|NUMBER)
+						(ID
+						{
+							variableValidateValue(_input.LT(-1).getText());
+						}
+						|NUMBER
+						)
 						{
 							_exprRepetition += _input.LT(-1).getText();
 						}
@@ -255,120 +305,214 @@ cmdloop3	: 'for'	AP
 							CommandRepetition cmd = new CommandRepetition(_exprRepetition, loopList, 3);
 							stack.peek().add(cmd);
 						}
-			;
+				;
 
-cmd_read: 'read' AP 
-				 ID {
+
+cmd_read		: 	'read' 
+						AP 
+				 		ID 
+				 		{
 							variableValidate(_input.LT(-1).getText());
 							_readId = _input.LT(-1).getText();
-						 }
-			FP SC?
-			{
-			 	RawrVariable var = (RawrVariable) symbolTable.get(_readId);
-			 	CommandRead cmd = new CommandRead(_readId, var);
-				stack.peek().add(cmd);
-			};
- 
-cmd_write : 'write' AP 
-					(ID 
-					{
-						variableValidate(_input.LT(-1).getText());
-						variableValidateValue(_input.LT(-1).getText());
-						_writeId = _input.LT(-1).getText();
-					}
-					|NUMBER
-					{
-						_writeId = _input.LT(-1).getText();
-					}
-					|TEXT
-					{
-						_writeId = _input.LT(-1).getText();
-					}
-					)
-			 FP SC?
-			 {
-			 	CommandWrite cmd = new CommandWrite(_writeId);
-				stack.peek().add(cmd);
-			 };
- 
-cmd_attrib : ID {
-					variableValidate(_input.LT(-1).getText());
-					_exprId = _input.LT(-1).getText();
-				} 
-			(ATTR  {_exprContent = "";} expr | | ICR  {variableValidateValue(_exprId); _exprContent = _exprId + " + 1";} )  SC?
-			{
-				CommandAttrib cmd = new CommandAttrib (_exprId, _exprContent, symbolTable);
-				stack.peek().add(cmd);
-			};
-          
-cmd_conditional : 'if' 
-			  AP 
-			  (ID {variableValidateValue(_input.LT(-1).getText()); }| NUMBER | TEXT | expr) { _exprDecision = _input.LT(-1).getText(); }
-			  
-			  OPREL  { _exprDecision += _input.LT(-1).getText(); }
-			  (ID {variableValidateValue(_input.LT(-1).getText());} | NUMBER)  { _exprDecision += _input.LT(-1).getText(); }
-			  FP 
-			  ACH { 
-			  			curThread = new ArrayList<AbstractCommand>();
-				  		stack.push(curThread);
-				   }
-			  (cmd)+
-			  FCH { listTrue = stack.pop(); }
-		   	  ('else' 
-		   	    ACH {
-			   	 	   	curThread = new ArrayList<AbstractCommand>();
-					  	stack.push(curThread);
-					 }
-		   	    (cmd+) 
-		   	 	FCH { 
-			   	 	     listFalse = stack.pop(); 
-			   	 	   	 CommandConditional cmd = new CommandConditional (_exprDecision, listTrue, listFalse);
-			   	 	   	 stack.peek().add(cmd);
-		   	 	    }
-		   	 	)?;
-          
-expr : term ( 
-	   OP {_exprContent += _input.LT(-1).getText();} 
-	   term )*;
-	 
-term:  ID {
-				variableValidate(_input.LT(-1).getText());
-				variableValidateValue(_input.LT(-1).getText());
-				variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
-				_exprContent += _input.LT(-1).getText();
-		   } 
-		| NUMBER
-		{	variableValidateType(_exprId, 0);
-			_exprContent += _input.LT(-1).getText();}
-		| TEXT
-		{	variableValidateType(_exprId, 1);
-			_exprContent += _input.LT(-1).getText();};
-     
-AP: '(';
-  
-FP: ')';
-  
-SC : ';';
-   
-OP : '+' | '-' | '*' | '/';
-   
-ATTR : '=';
+						}
+						FP 
+						SC?
+						{
+			 				RawrVariable var = (RawrVariable) symbolTable.get(_readId);
+			 				CommandRead cmd = new CommandRead(_readId, var);
+							stack.peek().add(cmd);
+						}
+				;
 
-ICR : '++';
-     
-ACH : '{';
-	
-FCH : '}';
-     
-OPREL: '>' | '<' | '>=' | '<=' | '==' | '!=';
-	 
-VIR: ',';
-     
-ID : [a-z]([a-z]|[A-Z]|[0-9])*;
-   
-NUMBER: [0-9]+ ('.' [0-9]+)?;
-TEXT:   ["]~["]*["];
-      
-WS: (' ' | '\t' | '\n' | '\r') -> skip;
+ 
+cmd_write 		:	'write' 
+						AP 
+						(ID 
+						{
+							variableValidate(_input.LT(-1).getText());
+							variableValidateValue(_input.LT(-1).getText());
+							_writeId = _input.LT(-1).getText();
+						}
+						|NUMBER
+						{
+							_writeId = _input.LT(-1).getText();
+						}
+						|TEXT
+						{
+							_writeId = _input.LT(-1).getText();
+						}
+						)
+			 			FP 
+			 			SC?
+			 			{
+			 				CommandWrite cmd = new CommandWrite(_writeId);
+							stack.peek().add(cmd);
+			 			}
+			 	;
 
-CM: 's2';
+
+cmd_attrib 		: 		ID 
+						{
+							variableValidate(_input.LT(-1).getText());
+							_exprId = _input.LT(-1).getText();
+						} 
+						(ATTR
+						{
+							_exprContent = "";
+						} 
+						expr 
+						||ICR  
+						{	
+							variableValidateValue(_exprId); 
+							_exprContent = _exprId + " + 1";
+						}
+						)
+						SC?
+						{
+							CommandAttrib cmd = new CommandAttrib (_exprId, _exprContent, symbolTable);
+							stack.peek().add(cmd);
+						}
+				;
+
+
+cmd_conditional	:	'if' 
+			  			AP 
+			  			(ID 
+			  			{
+			  				variableValidateValue(_input.LT(-1).getText());
+			  			}
+			  			|NUMBER 
+			  			|TEXT 
+			  			|expr) 	
+			  			{ 
+			  				_exprDecision = _input.LT(-1).getText();
+			  			}
+			  			OPREL
+			  			{ 
+			  				_exprDecision += _input.LT(-1).getText();
+			  			}
+			  			(ID 
+			  			{
+			  				variableValidateValue(_input.LT(-1).getText());
+			  			} 
+			  			|NUMBER
+			  			|TEXT 
+			  			|expr)
+			  			{ 
+			  				_exprDecision += _input.LT(-1).getText();
+			  			}
+			  			FP 
+			  			ACH 
+			  			{ 
+			  				curThread = new ArrayList<AbstractCommand>();
+				  			stack.push(curThread);
+				   		}
+			  			(cmd)+
+			  			FCH 
+			  			{ 
+			  				listTrue = stack.pop();
+			  			}
+		   	  		
+		   	  		('else' 
+		   	    		ACH 
+		   	    		{
+			   	 	   		curThread = new ArrayList<AbstractCommand>();
+					  		stack.push(curThread);
+					 	}
+		   	    		(cmd+) 
+		   	 			FCH 
+		   	 			{ 
+			   	 	     	listFalse = stack.pop(); 
+			   	 	   	 	CommandConditional cmd = new CommandConditional (_exprDecision, listTrue, listFalse);
+			   	 	   	 	stack.peek().add(cmd);
+		   	 	    	}
+		   	 		)?
+		   	 	;
+
+
+expr 			: 		term 
+						(OP 
+	   					{
+	   						_exprContent += _input.LT(-1).getText();
+	   					} 
+	   					term)*
+	   			;
+
+
+term			:  		ID 
+						{
+							variableValidate(_input.LT(-1).getText());
+							variableValidateValue(_input.LT(-1).getText());
+							variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
+							_exprContent += _input.LT(-1).getText();
+		   				} 
+						|NUMBER
+						{	
+							variableValidateType(_exprId, 0);
+							_exprContent += _input.LT(-1).getText();
+						}
+						|TEXT
+						{	
+							variableValidateType(_exprId, 1);
+							_exprContent += _input.LT(-1).getText();
+						}
+				;
+
+
+AP				: 	'('
+				;
+
+
+FP				: 	')'
+				;
+
+
+SC 				: 	';'
+				;
+
+
+OP 				: 	'+' | '-' | '*' | '/'
+				;
+
+
+ATTR 			: 	'='
+				;
+
+
+ICR 			: 	'++'
+				;
+
+
+ACH 			: 	'{'
+				;
+
+
+FCH 			: 	'}'
+				;
+
+
+OPREL			: 	'>' | '<' | '>=' | '<=' | '==' | '!='
+				;
+
+
+VIR				: 	','
+				;
+
+
+ID 				: 	[a-z]([a-z]|[A-Z]|[0-9])*
+				;
+
+
+NUMBER			: 	[0-9]+ ('.' [0-9]+)?
+				;
+
+
+TEXT			:   ["]~["]*["]
+				;
+
+
+CM				:	'$' .*? '$' -> skip
+				;
+
+WS				: 	(' ' | '\t' | '\n' | '\r') -> skip
+				;
