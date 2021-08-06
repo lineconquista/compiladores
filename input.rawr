@@ -1,11 +1,21 @@
 start:
 
-	number a, b;
+	number a, b, i;
+	i=0;
 	b=$aaaaaaaaaaaaaaaaa$1;
-	a=2; $ testeeee 92107u49 wjek{}{}P{;;;$
+	a=7; $ testeeee 92107u49 wjek{}{}P{;;;$
 	a++
 	write(a) $ aaaaaa $
 
 	$teste$
+	
+	while(b<a){
+		b++;
+		write(b);
+	}
+	
+	for(i=0;i<10;i=i+1){
+		write(i);
+	}
 	
 end;

@@ -96,8 +96,6 @@ public class RawrLangLexer extends Lexer {
 
 		
 		private int _type;
-		private char _tempChar;
-		private String _tempNote;
 		private String _varName;
 		private String _varValue;
 		private String _readId;
@@ -106,6 +104,7 @@ public class RawrLangLexer extends Lexer {
 		private String _exprContent;
 		private String _exprDecision;
 		private String _exprRepetition;
+		private String _tempLoopValue;
 		private RawrSymbolTable symbolTable = new RawrSymbolTable();
 		private RawrSymbol symbol;
 		private RawrProgram program = new RawrProgram();

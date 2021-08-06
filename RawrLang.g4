@@ -11,8 +11,6 @@ grammar RawrLang;
 @members{
 	
 	private int _type;
-	private char _tempChar;
-	private String _tempNote;
 	private String _varName;
 	private String _varValue;
 	private String _readId;
@@ -21,6 +19,7 @@ grammar RawrLang;
 	private String _exprContent;
 	private String _exprDecision;
 	private String _exprRepetition;
+	private String _tempLoopValue;
 	private RawrSymbolTable symbolTable = new RawrSymbolTable();
 	private RawrSymbol symbol;
 	private RawrProgram program = new RawrProgram();
@@ -256,7 +255,12 @@ cmdloop3		: 	'for'
 						{
 							_exprRepetition += _input.LT(-1).getText();
 						}
-						(ID {variableValidateValue(_input.LT(-1).getText());} |NUMBER)
+						(ID 
+						{
+							variableValidateValue(_input.LT(-1).getText());
+						} 
+						|NUMBER
+						)
 						{
 							_exprRepetition += _input.LT(-1).getText();
 						}
