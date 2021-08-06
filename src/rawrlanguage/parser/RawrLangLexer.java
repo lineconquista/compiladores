@@ -101,6 +101,7 @@ public class RawrLangLexer extends Lexer {
 		private String _readId;
 		private String _writeId;
 		private String _exprId;
+		private String _exprTemp;
 		private String _exprContent;
 		private String _exprDecision;
 		private String _exprRepetition;

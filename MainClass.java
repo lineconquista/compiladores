@@ -3,17 +3,15 @@ public class MainClass{
 	public static void main (String args[]){ 
 	Scanner _key = new Scanner(System.in);
 double a;
-double b;
 double i;
+a =50;
+i =5;
 i =0;
-b =1;
-a =7;
-a =a + 1;
-System.out.println(a);
-while (b<a) {
-b =b + 1;System.out.println(b);}
+for(i = 0;i<10;i=i+1) {
+System.out.println("oi");}
 
-for(i=0;i<10;i=i+1) {
-System.out.println(i);}
+i =5;
+for(i = 5;i<8;i=i+1) {
+System.out.println("aaa");}
 
 	}}

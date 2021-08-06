@@ -16,6 +16,7 @@ grammar RawrLang;
 	private String _readId;
 	private String _writeId;
 	private String _exprId;
+	private String _exprTemp;
 	private String _exprContent;
 	private String _exprDecision;
 	private String _exprRepetition;
@@ -223,24 +224,9 @@ cmdloop2		: 	'do'
 
 cmdloop3		: 	'for'	
 						AP
-						ID
+						cmd_attrib
 						{
-							variableValidateValue(_input.LT(-1).getText());
-							_exprRepetition = _input.LT(-1).getText();
-							
-						}
-						ATTR
-						{
-							_exprRepetition += _input.LT(-1).getText();
-						}
-						(ID
-						{
-							variableValidateValue(_input.LT(-1).getText());
-						}
-						|NUMBER
-						)
-						{
-							_exprRepetition += _input.LT(-1).getText();
+							_exprRepetition = _exprTemp;
 						}
 						SC
 						{
@@ -375,6 +361,7 @@ cmd_attrib 		: 		ID
 						{
 							CommandAttrib cmd = new CommandAttrib (_exprId, _exprContent, symbolTable);
 							stack.peek().add(cmd);
+							_exprTemp = _exprId + " = " + _exprContent;
 						}
 				;
 
@@ -423,7 +410,7 @@ cmd_conditional	:	'if'
 			   	 	   		curThread = new ArrayList<AbstractCommand>();
 					  		stack.push(curThread);
 					 	}
-		   	    		(cmd+) 
+		   	    		(cmd)+ 
 		   	 			FCH 
 		   	 			{ 
 			   	 	     	listFalse = stack.pop(); 

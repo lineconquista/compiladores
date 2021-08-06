@@ -1,21 +1,16 @@
 start:
 
-	number a, b, i;
-	i=0;
-	b=$aaaaaaaaaaaaaaaaa$1;
-	a=7; $ testeeee 92107u49 wjek{}{}P{;;;$
-	a++
-	write(a) $ aaaaaa $
-
-	$teste$
-	
-	while(b<a){
-		b++;
-		write(b);
-	}
+	number i, a;
+	a = 50
+	i = 5;
 	
 	for(i=0;i<10;i=i+1){
-		write(i);
+		write("oi");
 	}
+	
+	for(i=5;i<8;i=i+1){
+		write("aaa");
+	}
+	
 	
 end;
