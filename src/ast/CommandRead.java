@@ -17,4 +17,8 @@ public class CommandRead extends AbstractCommand {
 		return id + "= _key."+ (var.getType()==RawrVariable.NUMBER? "nextDouble();":"nextLine();") ;
 	}
 	
+	public String getId() {
+		return id;
+	}
+	
 }

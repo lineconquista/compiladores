@@ -1,9 +1,6 @@
 start:
 
-	number a;
-	a++
-	write(a)
-		
-
-	
+	text i;
+	i = "o"
+    
 end;

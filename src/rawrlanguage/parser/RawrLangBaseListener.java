@@ -95,13 +95,13 @@ public class RawrLangBaseListener implements RawrLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCmdloop(RawrLangParser.CmdloopContext ctx) { }
+	@Override public void enterCmd_loop(RawrLangParser.Cmd_loopContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCmdloop(RawrLangParser.CmdloopContext ctx) { }
+	@Override public void exitCmd_loop(RawrLangParser.Cmd_loopContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
