@@ -399,8 +399,7 @@ cmd_write 		:	'write'
 						}
 						|NUMBER
 						|TEXT
-						|expr
-						)
+						|expr)
 						{	
 			  				_writeId = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 						}
@@ -451,9 +450,15 @@ cmd_conditional	:	'if'
 			  				if (!variableValidateRead(_input.LT(-1).getText())){
 								variableValidate(_input.LT(-1).getText());
 								variableValidateValue(_input.LT(-1).getText());
+								variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
+								
 							}
 			  			}
 			  			|NUMBER
+			  			{
+			  				variableValidateType(_exprId, 0);
+			  				
+			  			}
 			  			|expr) 	
 			  			{ 
 			  				_exprDecision = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
@@ -469,9 +474,14 @@ cmd_conditional	:	'if'
 			  				if (!variableValidateRead(_input.LT(-1).getText())){
 								variableValidate(_input.LT(-1).getText());
 								variableValidateValue(_input.LT(-1).getText());
+								variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
 							}
 			  			} 
 			  			|NUMBER
+			  			{
+			  				variableValidateType(_exprId, 0);
+			  				
+			  			}
 			  			|expr)
 			  			{ 
 			  				_exprDecision += _exprContent == "" ? _input.LT(-1).getText() : _exprContent;

@@ -1,6 +1,10 @@
 start:
 
-	text i;
-	i = "o"
+	number i;
+	i=2
+	
+	if(i<2){
+		write(i);
+	}
     
 end;
