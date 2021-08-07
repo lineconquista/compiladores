@@ -1,16 +1,11 @@
 start:
 
-	number i, a;
-	a = 50
-	i = 5;
+	number a
 	
-	for(i=0;i<10;i=i+1){
-		write("oi");
-	}
-	
-	for(i=5;i<8;i=i+1){
-		write("aaa");
-	}
-	
-	
+
+    for(a=1+1;a<10;a++){
+        write(a);
+    }
+
+
 end;

@@ -112,7 +112,7 @@ public class RawrLangLexer extends Lexer {
 		private ArrayList <AbstractCommand> curThread;
 		private ArrayList<AbstractCommand> loopList;
 		private ArrayList<AbstractCommand> listTrue;
-		private ArrayList<AbstractCommand> listFalse;
+		private ArrayList<AbstractCommand> listFalse = new ArrayList<AbstractCommand>();
 		private Stack<ArrayList<AbstractCommand>> stack = new Stack <ArrayList<AbstractCommand>>();
 
 		
@@ -130,9 +130,12 @@ public class RawrLangLexer extends Lexer {
 		}
 		
 		public void variableValidateType(String id, int type_enum){
-			int type = ((RawrVariable) symbolTable.get(id)).getType();
-			if(type!=type_enum){
-				throw new RawrSemanticException ("Variable "+id+" is not assigned to type "+ type_enum);
+			if (id != null) {
+				int type = ((RawrVariable) symbolTable.get(id)).getType();
+				if(type!=type_enum){
+					String type_name = type_enum==0 ? "number" : "string";
+					throw new RawrSemanticException ("Variable "+id+" is not assigned to type "+ type_name);
+				}
 			}
 		}
 		

@@ -27,7 +27,7 @@ grammar RawrLang;
 	private ArrayList <AbstractCommand> curThread;
 	private ArrayList<AbstractCommand> loopList;
 	private ArrayList<AbstractCommand> listTrue;
-	private ArrayList<AbstractCommand> listFalse;
+	private ArrayList<AbstractCommand> listFalse = new ArrayList<AbstractCommand>();
 	private Stack<ArrayList<AbstractCommand>> stack = new Stack <ArrayList<AbstractCommand>>();
 
 	
@@ -45,9 +45,12 @@ grammar RawrLang;
 	}
 	
 	public void variableValidateType(String id, int type_enum){
-		int type = ((RawrVariable) symbolTable.get(id)).getType();
-		if(type!=type_enum){
-			throw new RawrSemanticException ("Variable "+id+" is not assigned to type "+ type_enum);
+		if (id != null) {
+			int type = ((RawrVariable) symbolTable.get(id)).getType();
+			if(type!=type_enum){
+				String type_name = type_enum==0 ? "number" : "string";
+				throw new RawrSemanticException ("Variable "+id+" is not assigned to type "+ type_name);
+			}
 		}
 	}
 	
@@ -144,24 +147,34 @@ cmd_loop 		: 		cmdloop1
 
 cmdloop1		: 	'while'
 						AP
-						ID
 						{
-							variableValidateValue(_input.LT(-1).getText());
-							_exprRepetition = _input.LT(-1).getText();
-							
-						}
-						OPREL
+			  				_exprContent = "";
+			  			}
+						(ID
 						{
-							_exprRepetition += _input.LT(-1).getText();
-						}
-						(ID 
-						{
+							variableValidate(_input.LT(-1).getText());
 							variableValidateValue(_input.LT(-1).getText());
 						}
 						|NUMBER
+						|expr)
+						{ 
+			  				_exprRepetition = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
+			  			}
+						OPREL
+						{
+							_exprRepetition += _input.LT(-1).getText();					
+			  				_exprContent = "";
+						}
+						(ID 
+						{
+							variableValidate(_input.LT(-1).getText());
+							variableValidateValue(_input.LT(-1).getText());
+						}
+						|NUMBER
+						|expr
 						)
 						{
-							_exprRepetition += _input.LT(-1).getText();
+							_exprRepetition += _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 						}
 						FP
 						ACH
@@ -195,27 +208,37 @@ cmdloop2		: 	'do'
 			  
 			  		'while'
 			  			AP
-					 	ID
+			  			{
+			  				_exprContent = "";
+			  			}
+					 	(ID
 					 	{
+					 		variableValidate(_input.LT(-1).getText());
 					 		variableValidateValue(_input.LT(-1).getText());
-					 		_exprRepetition = _input.LT(-1).getText();
-					 		
 					 	}
+					 	| NUMBER
+					 	| expr)
+					 	{ 
+			  				_exprRepetition = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
+			  			}
 					 	OPREL
 					 	{
 					 		_exprRepetition += _input.LT(-1).getText();
+					 		_exprContent = "";
 					 	}
 					 	(ID 
 					 	{
+					 		variableValidate(_input.LT(-1).getText());
 					 		variableValidateValue(_input.LT(-1).getText());
 					 	}
 					 	|NUMBER
+					 	|expr
 					 	)
-					 	{
-					 		_exprRepetition += _input.LT(-1).getText();
-					 	}
+						{ 
+			  				_exprRepetition += _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
+			  			}
 					 	FP
-					 	SC
+					 	SC?
 					 	{
 					 		CommandRepetition cmd = new CommandRepetition(_exprRepetition, loopList, 2);
 							stack.peek().add(cmd);
@@ -231,55 +254,51 @@ cmdloop3		: 	'for'
 						SC
 						{
 							_exprRepetition += _input.LT(-1).getText();
-						}
-						ID
+			  				_exprContent = "";
+			  			}
+						(ID
 						{
+							variableValidate(_input.LT(-1).getText());
 							variableValidateValue(_input.LT(-1).getText());
-							_exprRepetition += _input.LT(-1).getText();
 						}
+						| NUMBER
+						| expr)
+						{ 
+			  				_exprRepetition += _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
+			  			}
 						OPREL
 						{
 							_exprRepetition += _input.LT(-1).getText();
+							_exprContent = "";
 						}
 						(ID 
 						{
+							variableValidate(_input.LT(-1).getText());
 							variableValidateValue(_input.LT(-1).getText());
 						} 
 						|NUMBER
-						)
+						|expr)
 						{
-							_exprRepetition += _input.LT(-1).getText();
+							_exprRepetition += _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 						}
 						SC
 						{
 							_exprRepetition += _input.LT(-1).getText();
 						}
-						ID
+						(cmd_attrib
+						|ID
 						{
+							variableValidate(_input.LT(-1).getText());
 							variableValidateValue(_input.LT(-1).getText());
 							_exprRepetition += _input.LT(-1).getText();
-						}
-						ATTR
+						} 
+						ICR
 						{
 							_exprRepetition += _input.LT(-1).getText();
 						}
-						ID
-						{
-							variableValidateValue(_input.LT(-1).getText());
-							_exprRepetition += _input.LT(-1).getText();
-						}
-						OP
-						{
-							_exprRepetition += _input.LT(-1).getText();
-						}
-						(ID
-						{
-							variableValidateValue(_input.LT(-1).getText());
-						}
-						|NUMBER
 						)
 						{
-							_exprRepetition += _input.LT(-1).getText();
+							_exprRepetition += _exprTemp;
 						}
 						FP
 						ACH
@@ -351,7 +370,7 @@ cmd_attrib 		: 		ID
 							_exprContent = "";
 						} 
 						expr 
-						||ICR  
+						|ICR  
 						{	
 							variableValidateValue(_exprId); 
 							_exprContent = _exprId + " + 1";
@@ -368,29 +387,34 @@ cmd_attrib 		: 		ID
 
 cmd_conditional	:	'if' 
 			  			AP 
+			  			{
+			  				_exprContent = "";
+			  			}
 			  			(ID 
 			  			{
+			  				variableValidate(_input.LT(-1).getText());
 			  				variableValidateValue(_input.LT(-1).getText());
 			  			}
-			  			|NUMBER 
-			  			|TEXT 
+			  			|NUMBER
 			  			|expr) 	
 			  			{ 
-			  				_exprDecision = _input.LT(-1).getText();
+			  				_exprDecision = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 			  			}
 			  			OPREL
 			  			{ 
+			  				
 			  				_exprDecision += _input.LT(-1).getText();
+			  				_exprContent = "";
 			  			}
 			  			(ID 
 			  			{
+			  				variableValidate(_input.LT(-1).getText());
 			  				variableValidateValue(_input.LT(-1).getText());
 			  			} 
 			  			|NUMBER
-			  			|TEXT 
 			  			|expr)
 			  			{ 
-			  				_exprDecision += _input.LT(-1).getText();
+			  				_exprDecision += _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 			  			}
 			  			FP 
 			  			ACH 
@@ -410,14 +434,16 @@ cmd_conditional	:	'if'
 			   	 	   		curThread = new ArrayList<AbstractCommand>();
 					  		stack.push(curThread);
 					 	}
-		   	    		(cmd)+ 
+		   	    		(cmd+) 
 		   	 			FCH 
 		   	 			{ 
-			   	 	     	listFalse = stack.pop(); 
-			   	 	   	 	CommandConditional cmd = new CommandConditional (_exprDecision, listTrue, listFalse);
-			   	 	   	 	stack.peek().add(cmd);
+			   	 	     	listFalse = stack.pop();
 		   	 	    	}
 		   	 		)?
+		   	 		{
+		   	 			CommandConditional cmd = new CommandConditional (_exprDecision, listTrue, listFalse);
+			   	 	   	stack.peek().add(cmd);
+		   	 	    }
 		   	 	;
 
 
@@ -458,7 +484,7 @@ FP				: 	')'
 				;
 
 
-SC 				: 	';'
+SC   			: 	';'
 				;
 
 
