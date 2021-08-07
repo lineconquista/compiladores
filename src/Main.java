@@ -24,7 +24,7 @@ public class Main {
 		}catch(RawrSemanticException ex){
 			System.err.print("Semantic error: "+ex.getMessage());
 		}catch(Exception ex){
-			System.err.print("errooo: "+ex.getMessage());
+			System.err.print("Error: "+ex.getMessage());
 		}
 
 	}

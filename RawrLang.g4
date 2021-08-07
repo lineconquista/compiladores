@@ -54,6 +54,19 @@ grammar RawrLang;
 		}
 	}
 	
+	public boolean variableValidateRead(String id){
+		
+		for(AbstractCommand command: curThread) {
+			if(command instanceof ast.CommandRead){
+				if (id.equals(((ast.CommandRead) command).getId())){
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
 	public void exibeComandos(){
 		for(AbstractCommand c: program.getCommands()){
 			System.out.println(c);
@@ -152,10 +165,16 @@ cmdloop1		: 	'while'
 			  			}
 						(ID
 						{
-							variableValidate(_input.LT(-1).getText());
-							variableValidateValue(_input.LT(-1).getText());
+					 		if (!variableValidateRead(_input.LT(-1).getText())){
+								variableValidate(_input.LT(-1).getText());
+								variableValidateValue(_input.LT(-1).getText());
+								variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
+							}
 						}
 						|NUMBER
+						{
+							variableValidateType(_exprId, 0);
+						}
 						|expr)
 						{ 
 			  				_exprRepetition = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
@@ -167,10 +186,16 @@ cmdloop1		: 	'while'
 						}
 						(ID 
 						{
-							variableValidate(_input.LT(-1).getText());
-							variableValidateValue(_input.LT(-1).getText());
+					 		if (!variableValidateRead(_input.LT(-1).getText())){
+								variableValidate(_input.LT(-1).getText());
+								variableValidateValue(_input.LT(-1).getText());
+								variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
+							}
 						}
 						|NUMBER
+						{
+							variableValidateType(_exprId, 0);
+						}
 						|expr
 						)
 						{
@@ -213,10 +238,16 @@ cmdloop2		: 	'do'
 			  			}
 					 	(ID
 					 	{
-					 		variableValidate(_input.LT(-1).getText());
-					 		variableValidateValue(_input.LT(-1).getText());
+					 		if (!variableValidateRead(_input.LT(-1).getText())){
+								variableValidate(_input.LT(-1).getText());
+								variableValidateValue(_input.LT(-1).getText());
+								variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
+							}
 					 	}
 					 	| NUMBER
+					 	{
+							variableValidateType(_exprId, 0);
+						}
 					 	| expr)
 					 	{ 
 			  				_exprRepetition = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
@@ -228,10 +259,16 @@ cmdloop2		: 	'do'
 					 	}
 					 	(ID 
 					 	{
-					 		variableValidate(_input.LT(-1).getText());
-					 		variableValidateValue(_input.LT(-1).getText());
+					 		if (!variableValidateRead(_input.LT(-1).getText())){
+								variableValidate(_input.LT(-1).getText());
+								variableValidateValue(_input.LT(-1).getText());
+								variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
+							}
 					 	}
 					 	|NUMBER
+					 	{
+							variableValidateType(_exprId, 0);
+						}
 					 	|expr
 					 	)
 						{ 
@@ -258,11 +295,17 @@ cmdloop3		: 	'for'
 			  			}
 						(ID
 						{
-							variableValidate(_input.LT(-1).getText());
-							variableValidateValue(_input.LT(-1).getText());
+							if (!variableValidateRead(_input.LT(-1).getText())){
+								variableValidate(_input.LT(-1).getText());
+								variableValidateValue(_input.LT(-1).getText());
+								variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
+							}
 						}
 						| NUMBER
-						| expr)
+						{
+							variableValidateType(_exprId, 0);
+						}
+						|expr)
 						{ 
 			  				_exprRepetition += _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 			  			}
@@ -273,10 +316,16 @@ cmdloop3		: 	'for'
 						}
 						(ID 
 						{
-							variableValidate(_input.LT(-1).getText());
-							variableValidateValue(_input.LT(-1).getText());
+							if (!variableValidateRead(_input.LT(-1).getText())){
+								variableValidate(_input.LT(-1).getText());
+								variableValidateValue(_input.LT(-1).getText());
+								variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
+							}
 						} 
 						|NUMBER
+						{
+							variableValidateType(_exprId, 0);
+						}
 						|expr)
 						{
 							_exprRepetition += _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
@@ -288,8 +337,10 @@ cmdloop3		: 	'for'
 						(cmd_attrib
 						|ID
 						{
-							variableValidate(_input.LT(-1).getText());
-							variableValidateValue(_input.LT(-1).getText());
+							if (!variableValidateRead(_input.LT(-1).getText())){
+								variableValidate(_input.LT(-1).getText());
+								variableValidateValue(_input.LT(-1).getText());
+							}
 							_exprRepetition += _input.LT(-1).getText();
 						} 
 						ICR
@@ -336,21 +387,23 @@ cmd_read		: 	'read'
  
 cmd_write 		:	'write' 
 						AP 
+						{
+			  				_exprContent = "";
+			  			}
 						(ID 
 						{
-							variableValidate(_input.LT(-1).getText());
-							variableValidateValue(_input.LT(-1).getText());
-							_writeId = _input.LT(-1).getText();
+							if (!variableValidateRead(_input.LT(-1).getText())){
+								variableValidate(_input.LT(-1).getText());
+								variableValidateValue(_input.LT(-1).getText());
+							}
 						}
 						|NUMBER
-						{
-							_writeId = _input.LT(-1).getText();
-						}
 						|TEXT
-						{
-							_writeId = _input.LT(-1).getText();
-						}
+						|expr
 						)
+						{	
+			  				_writeId = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
+						}
 			 			FP 
 			 			SC?
 			 			{
@@ -372,7 +425,10 @@ cmd_attrib 		: 		ID
 						expr 
 						|ICR  
 						{	
-							variableValidateValue(_exprId); 
+							if (!variableValidateRead(_exprId)){
+								variableValidateValue(_exprId);
+								variableValidateType(_exprId, 0);
+							}
 							_exprContent = _exprId + " + 1";
 						}
 						)
@@ -392,8 +448,10 @@ cmd_conditional	:	'if'
 			  			}
 			  			(ID 
 			  			{
-			  				variableValidate(_input.LT(-1).getText());
-			  				variableValidateValue(_input.LT(-1).getText());
+			  				if (!variableValidateRead(_input.LT(-1).getText())){
+								variableValidate(_input.LT(-1).getText());
+								variableValidateValue(_input.LT(-1).getText());
+							}
 			  			}
 			  			|NUMBER
 			  			|expr) 	
@@ -408,8 +466,10 @@ cmd_conditional	:	'if'
 			  			}
 			  			(ID 
 			  			{
-			  				variableValidate(_input.LT(-1).getText());
-			  				variableValidateValue(_input.LT(-1).getText());
+			  				if (!variableValidateRead(_input.LT(-1).getText())){
+								variableValidate(_input.LT(-1).getText());
+								variableValidateValue(_input.LT(-1).getText());
+							}
 			  			} 
 			  			|NUMBER
 			  			|expr)
@@ -434,7 +494,7 @@ cmd_conditional	:	'if'
 			   	 	   		curThread = new ArrayList<AbstractCommand>();
 					  		stack.push(curThread);
 					 	}
-		   	    		(cmd+) 
+		   	    		(cmd)+ 
 		   	 			FCH 
 		   	 			{ 
 			   	 	     	listFalse = stack.pop();
@@ -458,9 +518,12 @@ expr 			: 		term
 
 term			:  		ID 
 						{
-							variableValidate(_input.LT(-1).getText());
-							variableValidateValue(_input.LT(-1).getText());
-							variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
+							if (!variableValidateRead(_input.LT(-1).getText())){
+								variableValidate(_input.LT(-1).getText());
+								variableValidateValue(_input.LT(-1).getText());
+								variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
+							}
+							
 							_exprContent += _input.LT(-1).getText();
 		   				} 
 						|NUMBER

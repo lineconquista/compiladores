@@ -139,6 +139,19 @@ public class RawrLangLexer extends Lexer {
 			}
 		}
 		
+		public boolean variableValidateRead(String id){
+			
+			for(AbstractCommand command: curThread) {
+				if(command instanceof ast.CommandRead){
+					if (id.equals(((ast.CommandRead) command).getId())){
+						return true;
+					}
+				}
+			}
+			
+			return false;
+		}
+		
 		public void exibeComandos(){
 			for(AbstractCommand c: program.getCommands()){
 				System.out.println(c);
