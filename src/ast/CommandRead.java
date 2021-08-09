@@ -10,6 +10,8 @@ public class CommandRead extends AbstractCommand {
 	public CommandRead (String id, RawrVariable var) {
 			this.id = id;
 			this.var = var;
+			
+			var.getUsed();
 	}
 	
 	@Override

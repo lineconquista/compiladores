@@ -1,7 +1,10 @@
 start:
 
-	number i;
-	i=2
+	number i, n, k;
+	text h;
+	
+	i=1;
+	n=2;
 	
 	if(i<2){
 		write(i);
