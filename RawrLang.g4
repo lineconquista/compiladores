@@ -79,12 +79,14 @@ grammar RawrLang;
 }
 
 prog 			: 	'start:' 
-						decl 
-						code  
+						decl? 
+						code? 
 					'end'  
 				{	
 					program.setVarTable(symbolTable);
-					program.setCommands(stack.pop());
+					if (stack.size() != 0) {
+						program.setCommands(stack.pop());
+					}
 				}
 				;
 
@@ -347,6 +349,18 @@ cmdloop3		: 	'for'
 						{
 							_exprRepetition += _input.LT(-1).getText();
 						}
+						|ID
+						{
+							if (!variableValidateRead(_input.LT(-1).getText())){
+								variableValidate(_input.LT(-1).getText());
+								variableValidateValue(_input.LT(-1).getText());
+							}
+							_exprRepetition += _input.LT(-1).getText();
+						} 
+						DCR
+						{
+							_exprRepetition += _input.LT(-1).getText();
+						}
 						)
 						{
 							_exprRepetition += _exprTemp;
@@ -399,7 +413,23 @@ cmd_write 		:	'write'
 						}
 						|NUMBER
 						|TEXT
-						|expr)
+						|expr
+						|ID ICR  
+						{	
+							if (!variableValidateRead(_exprId)){
+								variableValidateValue(_exprId);
+								variableValidateType(_exprId, 0);
+							}
+							_exprContent = _exprId + " + 1";
+						}
+						|ID DCR  
+						{	
+							if (!variableValidateRead(_exprId)){
+								variableValidateValue(_exprId);
+								variableValidateType(_exprId, 0);
+							}
+							_exprContent = _exprId + " - 1";
+						})
 						{	
 			  				_writeId = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 						}
@@ -429,6 +459,14 @@ cmd_attrib 		: 		ID
 								variableValidateType(_exprId, 0);
 							}
 							_exprContent = _exprId + " + 1";
+						}
+						|DCR  
+						{	
+							if (!variableValidateRead(_exprId)){
+								variableValidateValue(_exprId);
+								variableValidateType(_exprId, 0);
+							}
+							_exprContent = _exprId + " - 1";
 						}
 						)
 						SC?
@@ -570,6 +608,9 @@ ATTR 			: 	'='
 
 
 ICR 			: 	'++'
+				;
+				
+DCR 			: 	'--'
 				;
 
 
