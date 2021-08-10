@@ -476,54 +476,65 @@ cmd_attrib 		: 		ID
 							_exprTemp = _exprId + " = " + _exprContent;
 						}
 				;
-
+				
 
 cmd_conditional	:	'if' 
 			  			AP 
 			  			{
 			  				_exprContent = "";
 			  			}
-			  			(ID 
-			  			{
-			  				if (!variableValidateRead(_input.LT(-1).getText())){
-								variableValidate(_input.LT(-1).getText());
-								variableValidateValue(_input.LT(-1).getText());
-								variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
-								
-							}
-			  			}
-			  			|NUMBER
-			  			{
-			  				variableValidateType(_exprId, 0);
-			  				
-			  			}
-			  			|expr) 	
-			  			{ 
-			  				_exprDecision = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
-			  			}
-			  			OPREL
-			  			{ 
-			  				
-			  				_exprDecision += _input.LT(-1).getText();
-			  				_exprContent = "";
-			  			}
-			  			(ID 
-			  			{
-			  				if (!variableValidateRead(_input.LT(-1).getText())){
-								variableValidate(_input.LT(-1).getText());
-								variableValidateValue(_input.LT(-1).getText());
-								variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
-							}
-			  			} 
-			  			|NUMBER
-			  			{
-			  				variableValidateType(_exprId, 0);
-			  				
-			  			}
-			  			|expr)
-			  			{ 
-			  				_exprDecision += _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
-			  			}
+			  			(
+			  				ID 
+				  			{
+				  				if (!variableValidateRead(_input.LT(-1).getText())){
+									variableValidate(_input.LT(-1).getText());
+									variableValidateValue(_input.LT(-1).getText());
+									variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
+									
+								}
+				  			}	
+				  			|(ID 
+				  			{
+				  				if (!variableValidateRead(_input.LT(-1).getText())){
+									variableValidate(_input.LT(-1).getText());
+									variableValidateValue(_input.LT(-1).getText());
+									variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
+									
+								}
+				  			}
+				  			|NUMBER
+				  			{
+				  				variableValidateType(_exprId, 0);
+				  				
+				  			}
+				  			|expr) 	
+				  			{ 
+				  				_exprDecision = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
+				  			}
+				  			OPREL
+				  			{ 
+				  				
+				  				_exprDecision += _input.LT(-1).getText();
+				  				_exprContent = "";
+				  			}
+				  			(ID 
+				  			{
+				  				if (!variableValidateRead(_input.LT(-1).getText())){
+									variableValidate(_input.LT(-1).getText());
+									variableValidateValue(_input.LT(-1).getText());
+									variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
+								}
+				  			} 
+				  			|NUMBER
+				  			{
+				  				variableValidateType(_exprId, 0);
+				  				
+				  			}
+				  			|expr)
+				  			{ 
+				  				_exprDecision += _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
+				  			}
+				  			)
 			  			FP 
 			  			ACH 
 			  			{ 
@@ -535,6 +546,75 @@ cmd_conditional	:	'if'
 			  			{ 
 			  				listTrue = stack.pop();
 			  			}
+			  		('else if' 
+			  			AP 
+			  			{
+			  				_exprContent = "";
+			  			}
+			  			(
+			  				ID 
+				  			{
+				  				if (!variableValidateRead(_input.LT(-1).getText())){
+									variableValidate(_input.LT(-1).getText());
+									variableValidateValue(_input.LT(-1).getText());
+									variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
+									
+								}
+				  			}	
+				  			|(ID 
+				  			{
+				  				if (!variableValidateRead(_input.LT(-1).getText())){
+									variableValidate(_input.LT(-1).getText());
+									variableValidateValue(_input.LT(-1).getText());
+									variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
+									
+								}
+				  			}
+				  			|NUMBER
+				  			{
+				  				variableValidateType(_exprId, 0);
+				  				
+				  			}
+				  			|expr) 	
+				  			{ 
+				  				_exprDecision = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
+				  			}
+				  			OPREL
+				  			{ 
+				  				
+				  				_exprDecision += _input.LT(-1).getText();
+				  				_exprContent = "";
+				  			}
+				  			(ID 
+				  			{
+				  				if (!variableValidateRead(_input.LT(-1).getText())){
+									variableValidate(_input.LT(-1).getText());
+									variableValidateValue(_input.LT(-1).getText());
+									variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
+								}
+				  			} 
+				  			|NUMBER
+				  			{
+				  				variableValidateType(_exprId, 0);
+				  				
+				  			}
+				  			|expr)
+				  			{ 
+				  				_exprDecision += _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
+				  			}
+				  			)
+			  			FP 
+		   	    		ACH 
+		   	    		{
+			   	 	   		curThread = new ArrayList<AbstractCommand>();
+					  		stack.push(curThread);
+					 	}
+		   	    		(cmd)+ 
+		   	 			FCH 
+		   	 			{ 
+			   	 	     	listTrue = stack.pop();
+		   	 	    	}
+		   	 		)?
 		   	  		
 		   	  		('else' 
 		   	    		ACH 
