@@ -2,8 +2,10 @@ package datastructures;
 
 public class RawrVariable extends RawrSymbol{
 	
-	public static final int NUMBER = 0;
+	public static final int DOUBLE = 0;
+	public static final int INT = 2;
 	public static final int TEXT = 1;
+	public static final int BOOLEAN = 3;
 	private int type;
 	private String value;
 	
@@ -31,7 +33,16 @@ public class RawrVariable extends RawrSymbol{
 	
 	@Override
 	public String generateJavaCode () {
-		String str = type==NUMBER? "double" : "String";
+		String str = "";
+		if (type==DOUBLE) {
+			str = "double";
+		} else if (type==TEXT) {
+			str = "String";
+		} else if (type==INT) {
+			str = "int";
+		} else {
+			str = "Boolean";
+		}
 		return str + " " + super.name + ";";
 	}
 	 

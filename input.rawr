@@ -1,13 +1,9 @@
 start:
 
-	number i, n, k;
-	text h;
+	boolean b;
 	
-	i=1;
-	n=2;
+	b = true;
+
 	
-	if(i<2){
-		write(i);
-	}
     
 end;

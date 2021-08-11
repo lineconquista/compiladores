@@ -10,13 +10,21 @@ public class CommandRead extends AbstractCommand {
 	public CommandRead (String id, RawrVariable var) {
 			this.id = id;
 			this.var = var;
-			
-			var.getUsed();
 	}
 	
 	@Override
 	public String generateJavaCode() {
-		return id + "= _key."+ (var.getType()==RawrVariable.NUMBER? "nextDouble();":"nextLine();") ;
+		String str = id + "= _key.";
+		if (var.getType()==RawrVariable.DOUBLE) {
+			str += "nextDouble();";
+		} else if (var.getType()==RawrVariable.TEXT) {
+			str += "nextLine();";
+		} else if (var.getType()==RawrVariable.BOOLEAN) {
+			str += "nextBoolean();";
+		} else {
+			str += "nextInt();";
+		}
+		return str;
 	}
 	
 	public String getId() {

@@ -75,15 +75,15 @@ public interface RawrLangListener extends ParseTreeListener {
 	 */
 	void exitCmd(RawrLangParser.CmdContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link RawrLangParser#cmd_loop}.
+	 * Enter a parse tree produced by {@link RawrLangParser#cmdloop}.
 	 * @param ctx the parse tree
 	 */
-	void enterCmd_loop(RawrLangParser.Cmd_loopContext ctx);
+	void enterCmdloop(RawrLangParser.CmdloopContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link RawrLangParser#cmd_loop}.
+	 * Exit a parse tree produced by {@link RawrLangParser#cmdloop}.
 	 * @param ctx the parse tree
 	 */
-	void exitCmd_loop(RawrLangParser.Cmd_loopContext ctx);
+	void exitCmdloop(RawrLangParser.CmdloopContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link RawrLangParser#cmdloop1}.
 	 * @param ctx the parse tree
