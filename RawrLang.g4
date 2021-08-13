@@ -21,6 +21,7 @@ grammar RawrLang;
 	private String _exprDecision;
 	private String _exprRepetition;
 	private String _tempLoopValue;
+	private Boolean _despair = false;
 	private RawrSymbolTable symbolTable = new RawrSymbolTable();
 	private RawrSymbol symbol;
 	private RawrProgram program = new RawrProgram();
@@ -382,33 +383,9 @@ cmdloop3		: 	'for'
 						SC
 						{
 							_exprRepetition += _input.LT(-1).getText();
+							_despair = true;
 						}
-						(cmd_attrib
-						|ID
-						{
-							if (!variableValidateRead(_input.LT(-1).getText())){
-								variableValidate(_input.LT(-1).getText());
-								variableValidateValue(_input.LT(-1).getText());
-							}
-							_exprRepetition += _input.LT(-1).getText();
-						} 
-						ICR
-						{
-							_exprRepetition += _input.LT(-1).getText();
-						}
-						|ID
-						{
-							if (!variableValidateRead(_input.LT(-1).getText())){
-								variableValidate(_input.LT(-1).getText());
-								variableValidateValue(_input.LT(-1).getText());
-							}
-							_exprRepetition += _input.LT(-1).getText();
-						} 
-						DCR
-						{
-							_exprRepetition += _input.LT(-1).getText();
-						}
-						)
+						cmd_attrib
 						{
 							_exprRepetition += _exprTemp;
 						}
@@ -425,6 +402,7 @@ cmdloop3		: 	'for'
 							loopList = stack.pop();
 							CommandRepetition cmd = new CommandRepetition(_exprRepetition, loopList, 3);
 							stack.peek().add(cmd);
+							_despair = false;
 						}
 				;
 
@@ -462,22 +440,15 @@ cmd_write 		:	'write'
 						|INT
 						|TEXT
 						|expr
-						|ID ICR  
-						{	
-							if (!variableValidateRead(_exprId)){
-								variableValidateValue(_exprId);
-								variableValidateType(_exprId, 0);
-							}
-							_exprContent = _exprId + " + 1";
+						|
+						{
+							_despair = true;
 						}
-						|ID DCR  
+						cmd_attrib
 						{	
-							if (!variableValidateRead(_exprId)){
-								variableValidateValue(_exprId);
-								variableValidateType(_exprId, 0);
-							}
-							_exprContent = _exprId + " - 1";
-						})
+							_exprContent = _exprTemp;
+						}
+						)
 						{	
 			  				_writeId = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 						}
@@ -486,6 +457,7 @@ cmd_write 		:	'write'
 			 			{
 			 				CommandWrite cmd = new CommandWrite(_writeId);
 							stack.peek().add(cmd);
+							_despair = false;
 			 			}
 			 	;
 
@@ -519,8 +491,10 @@ cmd_attrib 		: 		ID
 						)
 						SC?
 						{
-							CommandAttrib cmd = new CommandAttrib (_exprId, _exprContent, symbolTable);
-							stack.peek().add(cmd);
+							if(_despair==false){
+								CommandAttrib cmd = new CommandAttrib (_exprId, _exprContent, symbolTable);
+								stack.peek().add(cmd);
+							}
 							_exprTemp = _exprId + " = " + _exprContent;
 						}
 				;

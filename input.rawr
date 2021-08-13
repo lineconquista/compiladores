@@ -1,9 +1,13 @@
 start:
 
-	text a;
-	a="oi";
-	if(a<"oi"){
-		write("legal");
-	}
+    int i;
     
+    for(i=2; i<5; i++){
+    	write(i);
+    }
+    
+    for(i=2; i<5; i=i+1){
+    	write(i);
+    }
+
 end;

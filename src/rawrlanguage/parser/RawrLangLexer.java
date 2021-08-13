@@ -109,6 +109,7 @@ public class RawrLangLexer extends Lexer {
 		private String _exprDecision;
 		private String _exprRepetition;
 		private String _tempLoopValue;
+		private Boolean _despair = false;
 		private RawrSymbolTable symbolTable = new RawrSymbolTable();
 		private RawrSymbol symbol;
 		private RawrProgram program = new RawrProgram();
