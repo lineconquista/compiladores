@@ -1,10 +1,12 @@
 start:
 
-	number i;
-	i=2
+	int i;
+	i=2;
 	
-	if(i<2){
-		write(i);
+	if("oi"<i){
+		write("teste");
 	}
+	
+	write(i);
     
 end;

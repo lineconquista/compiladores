@@ -48,8 +48,26 @@ grammar RawrLang;
 		if (id != null) {
 			int type = ((RawrVariable) symbolTable.get(id)).getType();
 			if(type!=type_enum){
-				String type_name = type_enum==0 ? "number" : "string";
+				String type_name = "";
+				if(type_enum==0){
+					type_name += "double";
+				}
+				else if(type_enum==1){
+					type_name += "string";
+				}
+				else if(type_enum==2){
+					type_name += "int";
+				}
 				throw new RawrSemanticException ("Variable "+id+" is not assigned to type "+ type_name);
+			}
+		}
+	}
+	
+	public void isNumber(String id){
+		if (id != null) {
+			int type = ((RawrVariable) symbolTable.get(id)).getType();
+			if(type != 0 && type != 2){
+				throw new RawrSemanticException ("Variable "+id+" is not a number");
 			}
 		}
 	}
@@ -77,6 +95,7 @@ grammar RawrLang;
 		program.generateTarget();
 	}
 }
+
 
 prog 			: 	'start:' 
 						decl 
@@ -126,13 +145,17 @@ decl_var 		: 		type
 				;
 
 
-type			: 	'number' 
+type			: 	'double' 
 						{
-							_type = RawrVariable.NUMBER;
+							_type = RawrVariable.DOUBLE;
 						}
 	      			|'text' 
 	      				{
 	      					_type = RawrVariable.TEXT;
+	      				}
+	      			|'int'
+	      				{
+	      					_type = RawrVariable.INT;
 	      				}
 	      		;
 
@@ -171,9 +194,13 @@ cmdloop1		: 	'while'
 								variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
 							}
 						}
-						|NUMBER
+						|DOUBLE
 						{
 							variableValidateType(_exprId, 0);
+						}
+						|INT
+						{
+							variableValidateType(_exprId, 2);
 						}
 						|expr)
 						{ 
@@ -192,9 +219,13 @@ cmdloop1		: 	'while'
 								variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
 							}
 						}
-						|NUMBER
+						|DOUBLE
 						{
 							variableValidateType(_exprId, 0);
+						}
+						|INT
+						{
+							variableValidateType(_exprId, 2);
 						}
 						|expr
 						)
@@ -244,11 +275,15 @@ cmdloop2		: 	'do'
 								variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
 							}
 					 	}
-					 	| NUMBER
+					 	|DOUBLE
 					 	{
 							variableValidateType(_exprId, 0);
 						}
-					 	| expr)
+						|INT
+					 	{
+							variableValidateType(_exprId, 2);
+						}
+						| expr)
 					 	{ 
 			  				_exprRepetition = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 			  			}
@@ -265,11 +300,15 @@ cmdloop2		: 	'do'
 								variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
 							}
 					 	}
-					 	|NUMBER
+					 	|DOUBLE
 					 	{
 							variableValidateType(_exprId, 0);
 						}
-					 	|expr
+						|INT
+						{
+							variableValidateType(_exprId, 2);
+						}
+						|expr
 					 	)
 						{ 
 			  				_exprRepetition += _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
@@ -301,9 +340,13 @@ cmdloop3		: 	'for'
 								variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
 							}
 						}
-						| NUMBER
+						|DOUBLE
 						{
 							variableValidateType(_exprId, 0);
+						}
+						|INT
+						{
+							variableValidateType(_exprId, 2);
 						}
 						|expr)
 						{ 
@@ -322,9 +365,13 @@ cmdloop3		: 	'for'
 								variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
 							}
 						} 
-						|NUMBER
+						|DOUBLE
 						{
 							variableValidateType(_exprId, 0);
+						}
+						|INT
+						{
+							variableValidateType(_exprId, 2);
 						}
 						|expr)
 						{
@@ -397,7 +444,8 @@ cmd_write 		:	'write'
 								variableValidateValue(_input.LT(-1).getText());
 							}
 						}
-						|NUMBER
+						|DOUBLE
+						|INT
 						|TEXT
 						|expr)
 						{	
@@ -426,7 +474,7 @@ cmd_attrib 		: 		ID
 						{	
 							if (!variableValidateRead(_exprId)){
 								variableValidateValue(_exprId);
-								variableValidateType(_exprId, 0);
+								isNumber(_exprId);
 							}
 							_exprContent = _exprId + " + 1";
 						}
@@ -454,9 +502,14 @@ cmd_conditional	:	'if'
 								
 							}
 			  			}
-			  			|NUMBER
+			  			|DOUBLE
 			  			{
 			  				variableValidateType(_exprId, 0);
+			  				
+			  			}
+						|INT
+			  			{
+			  				variableValidateType(_exprId, 2);
 			  				
 			  			}
 			  			|expr) 	
@@ -477,9 +530,14 @@ cmd_conditional	:	'if'
 								variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
 							}
 			  			} 
-			  			|NUMBER
+			  			|DOUBLE
 			  			{
 			  				variableValidateType(_exprId, 0);
+			  				
+			  			}
+						|INT
+			  			{
+			  				variableValidateType(_exprId, 2);
 			  				
 			  			}
 			  			|expr)
@@ -536,14 +594,19 @@ term			:  		ID
 							
 							_exprContent += _input.LT(-1).getText();
 		   				} 
-						|NUMBER
-						{	
+						|DOUBLE
+						{
 							variableValidateType(_exprId, 0);
 							_exprContent += _input.LT(-1).getText();
 						}
 						|TEXT
 						{	
 							variableValidateType(_exprId, 1);
+							_exprContent += _input.LT(-1).getText();
+						}
+						|INT
+						{
+							variableValidateType(_exprId, 2);
 							_exprContent += _input.LT(-1).getText();
 						}
 				;
@@ -593,7 +656,11 @@ ID 				: 	[a-z]([a-z]|[A-Z]|[0-9])*
 				;
 
 
-NUMBER			: 	[0-9]+ ('.' [0-9]+)?
+INT				:	[0-9]+
+				;
+
+
+DOUBLE			: 	[0-9]+ ('.' [0-9]+)?
 				;
 
 
@@ -603,6 +670,7 @@ TEXT			:   ["]~["]*["]
 
 CM				:	'$' .*? '$' -> skip
 				;
+
 
 WS				: 	(' ' | '\t' | '\n' | '\r') -> skip
 				;
