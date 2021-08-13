@@ -19,7 +19,10 @@ public class RawrSymbolTable {
 	}
 	
 	public RawrSymbol get(String symbolName) {
-		return map.get(symbolName);
+		RawrSymbol symbol = map.get(symbolName);
+		symbol.used();
+		
+		return symbol;
 	}
 
 	public ArrayList <RawrSymbol> getAll(){
@@ -28,5 +31,13 @@ public class RawrSymbolTable {
 			list.add(symbol);
 		}
 		return list;
+	}
+	
+	public void checkAllVarUsed() {
+		for (RawrSymbol symbol: map.values()) {
+			if (!symbol.getUsed()) {
+				System.out.println("\nVariable " + symbol.getName() + " declared but not used");
+			}
+		}
 	}
 }

@@ -1,8 +1,10 @@
+  
 package datastructures;
 
 public abstract class RawrSymbol {
 	
 	protected String name;
+	protected boolean used = false;
 	
 	public abstract String generateJavaCode();
 	
@@ -14,5 +16,13 @@ public abstract class RawrSymbol {
 	}
 	public void setName (String name) {
 		this.name = name;
+	}
+	
+	public void used () {
+		this.used = true;
+	}
+	
+	public boolean getUsed () {
+		return this.used;
 	}
 }

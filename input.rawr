@@ -2,8 +2,6 @@ start:
 
 	boolean b;
 	
-	b = true;
-
 	
     
 end;

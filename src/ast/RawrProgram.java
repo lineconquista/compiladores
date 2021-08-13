@@ -39,6 +39,8 @@ public class RawrProgram {
 			fr.write(str.toString());
 			fr.close();
 			
+			varTable.checkAllVarUsed();
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
