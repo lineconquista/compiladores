@@ -512,7 +512,7 @@ cmd_attrib 		: 		ID
 						{	
 							if (!variableValidateRead(_exprId)){
 								variableValidateValue(_exprId);
-								variableValidateType(_exprId, 0);
+								isNumber(_exprId);
 							}
 							_exprContent = _exprId + " - 1";
 						}
@@ -672,7 +672,6 @@ cmd_conditional	:	'if'
 			   	 	     	listTrue = stack.pop();
 		   	 	    	}
 		   	 		)?
-		   	  		
 		   	  		('else' 
 		   	    		ACH 
 		   	    		{

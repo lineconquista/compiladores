@@ -1,9 +1,9 @@
 start:
 
-	int i;
-	
-	for(i=2; i<10; i++){
-		write(i);
+	text a;
+	a="oi";
+	if(a<"oi"){
+		write("legal");
 	}
     
 end;
