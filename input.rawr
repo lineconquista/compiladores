@@ -1,6 +1,13 @@
 start:
 
-    int i;
+	int i;
+	i=2;
+	
+	if("oi"<i){
+		write("teste");
+	}
+	
+	write(i);
     
     for(i=2; i<5; i++){
     	write(i);
