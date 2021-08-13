@@ -2,7 +2,12 @@ import java.util.Scanner;
 public class MainClass{ 
 	public static void main (String args[]){ 
 	Scanner _key = new Scanner(System.in);
-int b;
-b =2;
-b= _key.nextInt();
+int a;
+boolean b;
+boolean c;
+b =false;
+a =1;
+c =true;
+if (b) {a =3;}
+System.out.println(a);
 	}}

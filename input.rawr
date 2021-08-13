@@ -1,7 +1,16 @@
 start:
 
-	boolean b;
+	boolean b,c;
+	int a;
 	
+	b=false;
+	a = 1;
+	c=true;
 	
-    
+	if(b) {
+		a = 3
+	}
+
+	
+    write(a)
 end;
