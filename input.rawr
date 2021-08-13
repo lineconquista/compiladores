@@ -1,13 +1,12 @@
 start:
 
-	number i, n, k;
-	i = 2
+	int i;
+	i=2;
 	
-	
-	if(1==3){
-		write(0);
-	}else{
-		write(2)
+	if("oi"<i){
+		write("teste");
 	}
+	
+	write(i);
     
 end;
