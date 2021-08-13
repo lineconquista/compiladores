@@ -1,12 +1,9 @@
 start:
 
 	int i;
-	i=2;
 	
-	if("oi"<i){
-		write("teste");
+	for(i=2; i<10; i++){
+		write(i);
 	}
-	
-	write(i);
     
 end;

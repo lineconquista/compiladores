@@ -617,11 +617,16 @@ cmd_conditional	:	'if'
 									
 								}
 				  			}
-				  			|NUMBER
-				  			{
-				  				variableValidateType(_exprId, 0);
-				  				
-				  			}
+				  			|DOUBLE
+			  				{
+			  					variableValidateType(_exprId, 0);
+			  				
+			  				}
+							|INT
+			  				{
+			  					variableValidateType(_exprId, 2);
+			  				
+			  				}
 				  			|expr) 	
 				  			{ 
 				  				_exprDecision = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
@@ -640,11 +645,16 @@ cmd_conditional	:	'if'
 									variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
 								}
 				  			} 
-				  			|NUMBER
-				  			{
-				  				variableValidateType(_exprId, 0);
-				  				
-				  			}
+				  			|DOUBLE
+			  				{
+			  					variableValidateType(_exprId, 0);
+			  				
+			  				}
+							|INT
+			  				{
+			  					variableValidateType(_exprId, 2);
+			  				
+			  				}
 				  			|expr)
 				  			{ 
 				  				_exprDecision += _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
