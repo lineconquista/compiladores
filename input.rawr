@@ -24,19 +24,31 @@ start:
     	write("Hello World2");
     }
     
-    
     a = "oi"
     s2 if e múltiplos else if s2
-    if (a=="oi"){
+    if (a!="oi"){
+    	write("1");
+    } else if  (a=="oi") {
+    	write("Hello World3");
+    } else {
+    
+    	write("ola")
+    }
+    
+    
+    a = "oi"
+    
+    if (a=="oi1"){
     	write("1");
     	
-    } else if (1<1) {
+    } else if (a=="oi2") {
     	write("1");
     	
     } else if (a=="oi") {
-    	write("Hello World3");
-    }
-    
+    	write("xxxxxx");
+    } else {
+    	write("x")
+    	}
     
 
 end;
