@@ -1,29 +1,19 @@
 start:
 
     s2 declaração de variáveis (variáveis k, b e c não serão utilizadas e irá gerar um Warning após a compilação) s2
-    int i, j, k
+    int i, j, k,l
     text a, b, c 
-    boolean z
+    boolean x,z
     
-    z = true
-
-    s2 atribuição de valor na variável j s2
-    j = 0
-
-    s2 comando de leitura s2
-    read(i)
-
-    s2 comando de escrita com incremento, decremento e expressão s2
-    write(i)
-    write(i++)
-    write(i--)
-    write(i+10)
-
-    read(a)
-    write(a)
-    
-    write(z)
-    
+    i=0
+    x=true
+    z=false
+  
+ 	if(z) {
+ 		i = 1
+ 	}
+ 	
+ 	write(i)
 
 
 end;

@@ -115,16 +115,6 @@ public interface RawrLangListener extends ParseTreeListener {
 	 */
 	void exitCmdloop3(RawrLangParser.Cmdloop3Context ctx);
 	/**
-	 * Enter a parse tree produced by {@link RawrLangParser#cmdloop4}.
-	 * @param ctx the parse tree
-	 */
-	void enterCmdloop4(RawrLangParser.Cmdloop4Context ctx);
-	/**
-	 * Exit a parse tree produced by {@link RawrLangParser#cmdloop4}.
-	 * @param ctx the parse tree
-	 */
-	void exitCmdloop4(RawrLangParser.Cmdloop4Context ctx);
-	/**
 	 * Enter a parse tree produced by {@link RawrLangParser#cmd_read}.
 	 * @param ctx the parse tree
 	 */
@@ -164,26 +154,6 @@ public interface RawrLangListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitCmd_conditional(RawrLangParser.Cmd_conditionalContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link RawrLangParser#cmd_conditional1}.
-	 * @param ctx the parse tree
-	 */
-	void enterCmd_conditional1(RawrLangParser.Cmd_conditional1Context ctx);
-	/**
-	 * Exit a parse tree produced by {@link RawrLangParser#cmd_conditional1}.
-	 * @param ctx the parse tree
-	 */
-	void exitCmd_conditional1(RawrLangParser.Cmd_conditional1Context ctx);
-	/**
-	 * Enter a parse tree produced by {@link RawrLangParser#cmd_conditional2}.
-	 * @param ctx the parse tree
-	 */
-	void enterCmd_conditional2(RawrLangParser.Cmd_conditional2Context ctx);
-	/**
-	 * Exit a parse tree produced by {@link RawrLangParser#cmd_conditional2}.
-	 * @param ctx the parse tree
-	 */
-	void exitCmd_conditional2(RawrLangParser.Cmd_conditional2Context ctx);
 	/**
 	 * Enter a parse tree produced by {@link RawrLangParser#expr}.
 	 * @param ctx the parse tree
