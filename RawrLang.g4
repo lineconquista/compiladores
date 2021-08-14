@@ -188,7 +188,6 @@ cmd				: 		cmd_read
 cmd_loop 		: 		cmdloop1
 						|cmdloop2
 						|cmdloop3
-						|cmdloop4
 				;
 
 
@@ -213,11 +212,17 @@ cmdloop1		: 	'while'
 						{
 							variableValidateType(_exprId, 2);
 						}
+						BOOLEAN
+						{
+							variableValidateType(_exprId, 3);
+						}
+						|FALSE
+						|TRUE
 						|expr)
 						{ 
 			  				_exprRepetition = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 			  			}
-						OPREL
+						|(OPREL
 						{
 							_exprRepetition += _input.LT(-1).getText();					
 			  				_exprContent = "";
@@ -238,11 +243,19 @@ cmdloop1		: 	'while'
 						{
 							variableValidateType(_exprId, 2);
 						}
+						BOOLEAN
+						{
+							variableValidateType(_exprId, 3);
+						}
+						|TRUE
+						|FALSE
 						|expr
 						)
 						{
 							_exprRepetition += _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 						}
+						
+						)
 						FP
 						ACH
 						{
@@ -415,40 +428,6 @@ cmdloop3		: 	'for'
 				;
 
 
-cmdloop4		: 	'while'
-						AP
-						{
-			  				_exprContent = "";
-			  			}
-						(ID
-						{
-					 		if (!variableValidateRead(_input.LT(-1).getText())){
-								variableValidate(_input.LT(-1).getText());
-								variableValidateValue(_input.LT(-1).getText());
-								variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
-							}
-						}
-						|BOOLEAN
-						{
-							variableValidateType(_exprId, 3);
-						}
-						|expr)
-						
-						FP
-						ACH
-						{
-							curThread = new ArrayList<AbstractCommand>();
-							stack.push(curThread);
-						}
-						(cmd)+
-						FCH
-						{
-							loopList = new ArrayList<AbstractCommand>();
-							loopList = stack.pop();
-							CommandRepetition cmd = new CommandRepetition(_exprRepetition, loopList, 1);
-							stack.peek().add(cmd);
-						}
-				;
 
 cmd_read		: 	'read' 
 						AP 
@@ -482,6 +461,7 @@ cmd_write 		:	'write'
 						|DOUBLE
 						|INT
 						|TEXT
+						|BOOLEAN
 						|expr
 						|
 						{
@@ -541,12 +521,8 @@ cmd_attrib 		: 		ID
 							_exprTemp = _exprId + " = " + _exprContent;
 						}
 				;
-				
-cmd_conditional :	cmd_conditional1
-					|cmd_conditional2
-					;
 
-cmd_conditional1	:	'if' 
+cmd_conditional	:	'if' 
 			  			AP 
 			  			{
 			  				_exprContent = "";
@@ -579,12 +555,19 @@ cmd_conditional1	:	'if'
 			  			{ 
 			  				_exprDecision = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 			  			}
-			  			OPREL
+			  			|((OPREL
 			  			{ 
 			  				
 			  				_exprDecision += _input.LT(-1).getText();
 			  				_exprContent = "";
 			  			}
+			  			|OPRELBOOL 
+			  			{ 
+			  				
+			  				_exprDecision += _input.LT(-1).getText();
+			  				_exprContent = "";
+			  			}
+			  			)
 			  			(ID 
 			  			{
 			  				if (!variableValidateRead(_input.LT(-1).getText())){
@@ -625,6 +608,8 @@ cmd_conditional1	:	'if'
 			  			{ 
 			  				listTrue = stack.pop();
 			  			}
+		
+			  		)
 			  		('else if' 
 			  			AP 
 			  			{
@@ -668,12 +653,19 @@ cmd_conditional1	:	'if'
 				  			{ 
 				  				_exprDecision = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 				  			}
-				  			OPREL
-				  			{ 
-				  				
-				  				_exprDecision += _input.LT(-1).getText();
-				  				_exprContent = "";
-				  			}
+				  			|((OPREL
+			  				{ 
+			  				
+			  					_exprDecision += _input.LT(-1).getText();
+			  					_exprContent = "";
+			  				}
+			  				|OPRELBOOL 
+			  				{ 
+			  				
+			  					_exprDecision += _input.LT(-1).getText();
+			  					_exprContent = "";
+			  				}
+			  				)
 				  			(ID 
 				  			{
 				  				if (!variableValidateRead(_input.LT(-1).getText())){
@@ -704,100 +696,8 @@ cmd_conditional1	:	'if'
 				  				_exprDecision += _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 				  			}
 				  			)
-			  			FP 
-		   	    		ACH 
-		   	    		{
-			   	 	   		curThread = new ArrayList<AbstractCommand>();
-					  		stack.push(curThread);
-					 	}
-		   	    		(cmd)+ 
-		   	 			FCH 
-		   	 			{ 
-			   	 	     	listTrue = stack.pop();
-		   	 	    	}
-		   	 		)?
-		   	  		('else' 
-		   	    		ACH 
-		   	    		{
-			   	 	   		curThread = new ArrayList<AbstractCommand>();
-					  		stack.push(curThread);
-					 	}
-		   	    		(cmd)+ 
-		   	 			FCH 
-		   	 			{ 
-			   	 	     	listFalse = stack.pop();
-		   	 	    	}
-		   	 		)?
-		   	 		{
-		   	 			CommandConditional cmd = new CommandConditional (_exprDecision, listTrue, listFalse);
-			   	 	   	stack.peek().add(cmd);
-		   	 	    }
-		   	 	;
-
-
-
-cmd_conditional2	:	'if' 
-			  			AP 
-			  			{
-			  				_exprContent = "";
-			  			}
-			  			(ID 
-			  			{
-			  				if (!variableValidateRead(_input.LT(-1).getText())){
-								variableValidate(_input.LT(-1).getText());
-								variableValidateValue(_input.LT(-1).getText());
-								variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
-								
-							}
-			  			}
-			  			|BOOLEAN
-			  			{
-			  				variableValidateType(_exprId, 3);
-			  				
-			  			}
-			  			|expr) 	
-			  			{ 
-			  				_exprDecision = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
-			  			}
-			  			
-			  			FP 
-			  			ACH 
-			  			{ 
-			  				curThread = new ArrayList<AbstractCommand>();
-				  			stack.push(curThread);
-				   		}
-			  			(cmd)+
-			  			FCH 
-			  			{ 
-			  				listTrue = stack.pop();
-			  			}
-			  		('else if' 
-			  			AP 
-			  			{
-			  				_exprContent = "";
-			  			}
-			  			(
-			  				ID 
-				  			{
-				  				if (!variableValidateRead(_input.LT(-1).getText())){
-									variableValidate(_input.LT(-1).getText());
-									variableValidateValue(_input.LT(-1).getText());
-									variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
-									
-								}
-				  			}
-				  			|BOOLEAN
-			  				{
-			  					variableValidateType(_exprId, 3);
-			  				
-			  				}
-				  			|expr
-				  		) 	
-				  			{ 
-				  				_exprDecision = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
-				  			}
 				  			
-				  			
+				  		)
 			  			FP 
 		   	    		ACH 
 		   	    		{
@@ -907,6 +807,9 @@ FCH 			: 	'}'
 
 
 OPREL			: 	'>' | '<' | '>=' | '<=' | '==' | '!='
+				;
+
+OPRELBOOL		: 	'&&' | '||'
 				;
 
 

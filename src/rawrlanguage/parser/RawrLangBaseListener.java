@@ -143,18 +143,6 @@ public class RawrLangBaseListener implements RawrLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCmdloop4(RawrLangParser.Cmdloop4Context ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitCmdloop4(RawrLangParser.Cmdloop4Context ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterCmd_read(RawrLangParser.Cmd_readContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -198,30 +186,6 @@ public class RawrLangBaseListener implements RawrLangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitCmd_conditional(RawrLangParser.Cmd_conditionalContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterCmd_conditional1(RawrLangParser.Cmd_conditional1Context ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitCmd_conditional1(RawrLangParser.Cmd_conditional1Context ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterCmd_conditional2(RawrLangParser.Cmd_conditional2Context ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitCmd_conditional2(RawrLangParser.Cmd_conditional2Context ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

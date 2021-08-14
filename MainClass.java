@@ -5,18 +5,15 @@ public class MainClass{
 String a;
 String b;
 String c;
+boolean x;
 int i;
 int j;
 boolean z;
 int k;
-z =true;
-j =0;
-i= _key.nextInt();
+int l;
+i =0;
+x =true;
+z =false;
+if (z) {i =1;}
 System.out.println(i);
-System.out.println(i = i + 1);
-System.out.println(i = i - 1);
-System.out.println(i+10);
-a= _key.next();
-System.out.println(a);
-System.out.println(z);
 	}}
