@@ -1,4 +1,3 @@
-  
 package datastructures;
 
 public abstract class RawrSymbol {

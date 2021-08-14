@@ -21,10 +21,10 @@ public class CommandRead extends AbstractCommand {
 			str += "nextDouble();";
 		} else if (var.getType()==RawrVariable.TEXT) {
 			str += "nextLine();";
+		} else if (var.getType()==RawrVariable.INT) {
+			str += "nextInt();";
 		} else if (var.getType()==RawrVariable.BOOLEAN) {
 			str += "nextBoolean();";
-		} else if (var.getType()==RawrVariable.INT){
-			str += "nextInt();";
 		}
 		return str;
 	}

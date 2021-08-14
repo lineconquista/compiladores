@@ -8,7 +8,7 @@ public class RawrVariable extends RawrSymbol{
 	public static final int BOOLEAN = 3;
 	private int type;
 	private String value;
-
+	
 	public RawrVariable(String name, int type, String value) {
 		super(name);
 		this.type = type;
@@ -31,7 +31,6 @@ public class RawrVariable extends RawrSymbol{
 		this.value = value;
 	}
 	
-	
 	@Override
 	public String generateJavaCode () {
 		String str = "";
@@ -48,4 +47,3 @@ public class RawrVariable extends RawrSymbol{
 	}
 	 
 }
-

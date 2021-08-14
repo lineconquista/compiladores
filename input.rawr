@@ -1,16 +1,13 @@
 start:
 
-	boolean b,c;
-	int a;
-	
-	b=false;
-	a = 1;
-	c=true;
-	
-	if(b) {
-		a = 3
-	}
+    int i;
+    
+    for(i=2; i<5; i++){
+    	write(i);
+    }
+    
+    for(i=2; i<5; i=i+1){
+    	write(i);
+    }
 
-	
-    write(a)
 end;

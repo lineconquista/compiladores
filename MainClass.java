@@ -2,12 +2,13 @@ import java.util.Scanner;
 public class MainClass{ 
 	public static void main (String args[]){ 
 	Scanner _key = new Scanner(System.in);
-int a;
-boolean b;
-boolean c;
-b =false;
-a =1;
-c =true;
-if (b) {a =3;}
-System.out.println(a);
+int i;
+i =2;
+for(i = 2;i<5;i = i + 1) {
+System.out.println(i);}
+
+i =2;
+for(i = 2;i<5;i = i+1) {
+System.out.println(i);}
+
 	}}

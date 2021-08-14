@@ -30,12 +30,14 @@ grammar RawrLang;
 	private ArrayList<AbstractCommand> listTrue;
 	private ArrayList<AbstractCommand> listFalse = new ArrayList<AbstractCommand>();
 	private Stack<ArrayList<AbstractCommand>> stack = new Stack <ArrayList<AbstractCommand>>();
+
 	
 	public void variableValidate(String id){
 		if (!symbolTable.exists(id)){
 			throw new RawrSemanticException ("Variable "+id+" not declared");
 		}
 	}
+	
 	
 	public void variableValidateValue(String id){
 		String value = ((RawrVariable) symbolTable.get(id)).getValue();
@@ -67,6 +69,7 @@ grammar RawrLang;
 			}
 		}
 	}
+	
 	public void isNumber(String id){
 		if (id != null) {
 			int type = ((RawrVariable) symbolTable.get(id)).getType();
@@ -168,6 +171,7 @@ type			: 	'double'
 	      					_type = RawrVariable.INT;
 	      				}
 	      		;
+
 
 
 code 			: 		{ 
@@ -482,7 +486,6 @@ cmd_write 		:	'write'
 						|DOUBLE
 						|INT
 						|TEXT
-						|BOOLEAN
 						|expr
 						|
 						{
@@ -830,8 +833,7 @@ cmd_conditional2	:	'if'
 		   	 	    }
 		   	 	;
 
-expr 			: 		
-						term 
+expr 			: 		term 
 						(OP 
 	   					{
 	   						_exprContent += _input.LT(-1).getText();
@@ -849,7 +851,7 @@ term			:  		ID
 							}
 							
 							_exprContent += _input.LT(-1).getText();
-		   				}
+		   				} 
 						|DOUBLE
 						{
 							variableValidateType(_exprId, 0);
@@ -912,31 +914,39 @@ FCH 			: 	'}'
 OPREL			: 	'>' | '<' | '>=' | '<=' | '==' | '!='
 				;
 
+
 VIR				: 	','
 				;
 
-BOOLEAN			: ('false' | 'true');
 
-FALSE			: 'false';
+BOOLEAN			: ('false' | 'true')
+				;
 
-TRUE			: 'true';
+FALSE			: 'false'
+				;
+
+TRUE			: 'true'
+				;
 
 ID 				: 	[a-z]([a-z]|[A-Z]|[0-9])*
 				;
 
 
-INT				:	'-'? [0-9]+
+INT				:	[0-9]+
 				;
 
 
-DOUBLE			: 	'-'? [0-9]+ ('.' [0-9]+)?
+DOUBLE			: 	[0-9]+ ('.' [0-9]+)?
 				;
-
 
 
 TEXT			:   ["]~["]*["]
 				;
+
+
 CM				:	's2' .*? 's2' -> skip
 				;
+
+
 WS				: 	(' ' | '\t' | '\n' | '\r') -> skip
 				;
