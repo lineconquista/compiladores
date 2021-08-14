@@ -128,7 +128,6 @@ public class RawrLangParser extends Parser {
 		private ArrayList<AbstractCommand> listTrue;
 		private ArrayList<AbstractCommand> listFalse = new ArrayList<AbstractCommand>();
 		private Stack<ArrayList<AbstractCommand>> stack = new Stack <ArrayList<AbstractCommand>>();
-
 		
 		public void variableValidate(String id){
 			if (!symbolTable.exists(id)){
@@ -904,7 +903,7 @@ public class RawrLangParser extends Parser {
 					throw new NoViableAltException(this);
 				}
 				 
-							  				_exprDecision += _input.LT(-1).getText();
+							  				_exprRepetition += _input.LT(-1).getText();
 							  				_exprContent = "";
 							  			
 				setState(125);
@@ -1221,7 +1220,7 @@ public class RawrLangParser extends Parser {
 					throw new NoViableAltException(this);
 				}
 				 
-							  				_exprDecision += _input.LT(-1).getText();
+							  				_exprRepetition += _input.LT(-1).getText();
 							  				_exprContent = "";
 							  			
 				setState(187);
@@ -1464,7 +1463,7 @@ public class RawrLangParser extends Parser {
 				throw new NoViableAltException(this);
 			}
 			 
-						  				_exprDecision += _input.LT(-1).getText();
+						  				_exprRepetition += _input.LT(-1).getText();
 						  				_exprContent = "";
 						  			
 			setState(227);

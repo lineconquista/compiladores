@@ -120,7 +120,6 @@ public class RawrLangLexer extends Lexer {
 		private ArrayList<AbstractCommand> listTrue;
 		private ArrayList<AbstractCommand> listFalse = new ArrayList<AbstractCommand>();
 		private Stack<ArrayList<AbstractCommand>> stack = new Stack <ArrayList<AbstractCommand>>();
-
 		
 		public void variableValidate(String id){
 			if (!symbolTable.exists(id)){

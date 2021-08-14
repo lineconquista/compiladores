@@ -30,7 +30,6 @@ grammar RawrLang;
 	private ArrayList<AbstractCommand> listTrue;
 	private ArrayList<AbstractCommand> listFalse = new ArrayList<AbstractCommand>();
 	private Stack<ArrayList<AbstractCommand>> stack = new Stack <ArrayList<AbstractCommand>>();
-
 	
 	public void variableValidate(String id){
 		if (!symbolTable.exists(id)){
@@ -243,7 +242,7 @@ cmdloop1		: 	'while'
 						}
 						)
 						{ 
-			  				_exprDecision += _input.LT(-1).getText();
+			  				_exprRepetition += _input.LT(-1).getText();
 			  				_exprContent = "";
 			  			}
 						(ID 
@@ -348,7 +347,7 @@ cmdloop2		: 	'do'
 						}
 						)
 						{ 
-			  				_exprDecision += _input.LT(-1).getText();
+			  				_exprRepetition += _input.LT(-1).getText();
 			  				_exprContent = "";
 			  			}
 					 	(ID 
@@ -425,7 +424,7 @@ cmdloop3		: 	'for'
 						}
 						)
 						{ 
-			  				_exprDecision += _input.LT(-1).getText();
+			  				_exprRepetition += _input.LT(-1).getText();
 			  				_exprContent = "";
 			  			}
 						(ID 
@@ -903,11 +902,7 @@ DOUBLE			: 	[0-9]+ ('.' [0-9]+)?
 
 TEXT			:   ["]~["]*["]
 				;
-
-
 CM				:	's2' .*? 's2' -> skip
 				;
-
-
 WS				: 	(' ' | '\t' | '\n' | '\r') -> skip
 				;
