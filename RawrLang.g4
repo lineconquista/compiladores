@@ -21,6 +21,8 @@ grammar RawrLang;
 	private String _exprDecision;
 	private String _exprRepetition;
 	private String _tempLoopValue;
+	private Boolean _conditionalElseIf = false;
+	private Boolean _conditionalElse = false;
 	private Boolean _despair = false;
 	private RawrSymbolTable symbolTable = new RawrSymbolTable();
 	private RawrSymbol symbol;
@@ -663,112 +665,108 @@ cmd_conditional	:	'if'
 		
 			  		
 			  		('else if' 
+			  			
 			  			AP 
 			  			{
 			  				_exprContent = "";
+			  				_conditionalElseIf = true;
 			  			}
-			  			(
-			  				ID 
-				  			{
-				  				if (!variableValidateRead(_input.LT(-1).getText())){
-									variableValidate(_input.LT(-1).getText());
-									variableValidateValue(_input.LT(-1).getText());
-									variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
-									
-								}
-				  			}	
-				  			|(ID 
-				  			{
-				  				if (!variableValidateRead(_input.LT(-1).getText())){
-									variableValidate(_input.LT(-1).getText());
-									variableValidateValue(_input.LT(-1).getText());
-									variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
-									
-								}
-				  			}
-				  			|DOUBLE
-			  				{
-			  					variableValidateType(_exprId, 0);
+			  			(ID 
+			  			{
+			  				if (!variableValidateRead(_input.LT(-1).getText())){
+								variableValidate(_input.LT(-1).getText());
+								variableValidateValue(_input.LT(-1).getText());
+								variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
+								
+							}
+			  			}
+			  			|DOUBLE
+			  			{
+			  				variableValidateType(_exprId, 0);
 			  				
-			  				}
-							|INT
-			  				{
-			  					variableValidateType(_exprId, 2);
+			  			}
+						|INT
+			  			{
+			  				variableValidateType(_exprId, 2);
 			  				
-			  				}
-			  				|BOOLEAN
-			  				{
+			  			}
+			  			|BOOLEAN
+			  			{
 			  				variableValidateType(_exprId, 3);
 			  				
-			  				}
-				  			|expr) 	
-				  			{ 
-				  				_exprDecision = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
-				  			}
-				  			((OPREL
-							|OPRELNUM
-							{
-								isNumber(_exprId);
-							}
-							|OPRELBOOL
-							{
-								isBoolean(_exprId);
+			  			}
+			  			|expr) 	
+			  			{ 
+			  				_exprDecision = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
+			  			}
+			  			((OPREL
+						|OPRELNUM
+						{
+							isNumber(_exprId);
+						}
+						|OPRELBOOL
+						{
+							isBoolean(_exprId);
 						
+						}
+						)
+						{ 
+			  				_exprDecision += _input.LT(-1).getText();
+			  				_exprContent = "";
+			  			}
+			  			(ID 
+			  			{
+			  				if (!variableValidateRead(_input.LT(-1).getText())){
+								variableValidate(_input.LT(-1).getText());
+								variableValidateValue(_input.LT(-1).getText());
+								variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
 							}
-							)
-							{ 
-			  					_exprDecision += _input.LT(-1).getText();
-			  					_exprContent = "";
-			  				}
-				  			(ID 
-				  			{
-				  				if (!variableValidateRead(_input.LT(-1).getText())){
-									variableValidate(_input.LT(-1).getText());
-									variableValidateValue(_input.LT(-1).getText());
-									variableValidateType(_input.LT(-1).getText(),((RawrVariable) symbolTable.get(_exprId)).getType());
-								}
-				  			} 
-				  			|DOUBLE
-			  				{
-			  					variableValidateType(_exprId, 0);
+			  			} 
+			  			|DOUBLE
+			  			{
+			  				variableValidateType(_exprId, 0);
 			  				
-			  				}
-							|INT
-			  				{
-			  					variableValidateType(_exprId, 2);
+			  			}
+						|INT
+			  			{
+			  				variableValidateType(_exprId, 2);
 			  				
-			  				}
-			  				|BOOLEAN
-			  				{
-			  					variableValidateType(_exprId, 3);
+			  			}
+			  			|BOOLEAN
+			  			{
+			  				variableValidateType(_exprId, 3);
 			  				
-			  				}
-			  				|FALSE
-			  				|TRUE
-				  			|expr)
-				  			{ 
-				  				_exprDecision += _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
-				  			}
-				  			)
-				  			
-				  		)?
+			  			}
+			  			|FALSE
+			  			|TRUE
+			  			|expr)
+			  			{ 
+			  				_exprDecision += _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
+			  			}
+			  		
+			  			)?
 			  			FP 
-		   	    		ACH 
-		   	    		{
-			   	 	   		curThread = new ArrayList<AbstractCommand>();
-					  		stack.push(curThread);
-					 	}
-		   	    		(cmd)+ 
-		   	 			FCH 
-		   	 			{ 
-			   	 	     	listTrue = stack.pop();
-		   	 	    	}
-		   	 		)?
+			  			ACH 
+			  			{ 
+			  				curThread = new ArrayList<AbstractCommand>();
+				  			stack.push(curThread);
+				   		}
+			  			(cmd)+
+			  			FCH 
+			  			{ 
+			  				listTrue = stack.pop();
+			  			}
+		   	 	    	
+		   	 	    	
+		   	 	    	
+		   	 	    	
+		   	 		)*
 		   	  		('else' 
 		   	    		ACH 
 		   	    		{
 			   	 	   		curThread = new ArrayList<AbstractCommand>();
 					  		stack.push(curThread);
+			  				_conditionalElse = true;
 					 	}
 		   	    		(cmd)+ 
 		   	 			FCH 
@@ -777,7 +775,7 @@ cmd_conditional	:	'if'
 		   	 	    	}
 		   	 		)?
 		   	 		{
-		   	 			CommandConditional cmd = new CommandConditional (_exprDecision, listTrue, listFalse);
+		   	 			CommandConditional cmd = new CommandConditional (_exprDecision, listTrue, listFalse, _conditionalElseIf, _conditionalElse);
 			   	 	   	stack.peek().add(cmd);
 		   	 	    }
 		   	 	;
