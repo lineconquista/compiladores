@@ -18,7 +18,7 @@ public class Main {
 			parser = new RawrLangParser(tokenStream);
 			parser.prog();
 			parser.generateCode();
-			System.out.print("Sucessfull compilation :)");
+			System.out.print("\n \nSucessfull compilation :)");
 			
 			
 		}catch(RawrSemanticException ex){

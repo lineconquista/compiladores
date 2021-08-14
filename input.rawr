@@ -1,13 +1,23 @@
 start:
 
-    int i;
-    
-    for(i=2; i<5; i++){
-    	write(i);
-    }
-    
-    for(i=2; i<5; i=i+1){
-    	write(i);
-    }
+    s2 declaração de variáveis (variáveis k, b e c não serão utilizadas e irá gerar um Warning após a compilação) s2
+    int i, j, k
+    text a, b, c 
+
+    s2 atribuição de valor na variável j s2
+    j = 0
+
+    s2 comando de leitura s2
+    read(i)
+
+    s2 comando de escrita com incremento, decremento e expressão s2
+    write(i)
+    write(i++)
+    write(i--)
+    write(i+10)
+
+    read(a)
+    write(a)
+
 
 end;
