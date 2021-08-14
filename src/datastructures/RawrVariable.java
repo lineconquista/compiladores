@@ -5,6 +5,7 @@ public class RawrVariable extends RawrSymbol{
 	public static final int DOUBLE = 0;
 	public static final int TEXT = 1;
 	public static final int INT = 2;
+	public static final int BOOLEAN = 3;
 	private int type;
 	private String value;
 	
@@ -39,6 +40,8 @@ public class RawrVariable extends RawrSymbol{
 			str = "String";
 		} else if (type==INT) {
 			str = "int";
+		} else if (type==BOOLEAN) {
+			str = "boolean";
 		}
 		return str + " " + super.name + ";";
 	}
