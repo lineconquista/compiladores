@@ -209,7 +209,12 @@ cmdloop1		: 	'while'
 						{ 
 			  				_exprRepetition = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 			  			}
-						OPREL
+						(OPREL
+						|OPRELNUM
+						{
+							isNumber(_exprId);
+						}
+						)
 						{
 							_exprRepetition += _input.LT(-1).getText();					
 			  				_exprContent = "";
@@ -290,7 +295,12 @@ cmdloop2		: 	'do'
 					 	{ 
 			  				_exprRepetition = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 			  			}
-					 	OPREL
+					 	(OPREL
+						|OPRELNUM
+						{
+							isNumber(_exprId);
+						}
+						)
 					 	{
 					 		_exprRepetition += _input.LT(-1).getText();
 					 		_exprContent = "";
@@ -355,7 +365,12 @@ cmdloop3		: 	'for'
 						{ 
 			  				_exprRepetition += _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 			  			}
-						OPREL
+						(OPREL
+						|OPRELNUM
+						{
+							isNumber(_exprId);
+						}
+						)
 						{
 							_exprRepetition += _input.LT(-1).getText();
 							_exprContent = "";
@@ -528,7 +543,12 @@ cmd_conditional	:	'if'
 			  			{ 
 			  				_exprDecision = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 			  			}
-			  			OPREL
+			  			(OPREL
+						|OPRELNUM
+						{
+							isNumber(_exprId);
+						}
+						)
 			  			{ 
 			  				
 			  				_exprDecision += _input.LT(-1).getText();
@@ -605,7 +625,12 @@ cmd_conditional	:	'if'
 				  			{ 
 				  				_exprDecision = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 				  			}
-				  			OPREL
+				  			(OPREL
+							|OPRELNUM
+							{
+								isNumber(_exprId);
+							}
+							)
 				  			{ 
 				  				
 				  				_exprDecision += _input.LT(-1).getText();
@@ -737,7 +762,11 @@ FCH 			: 	'}'
 				;
 
 
-OPREL			: 	'>' | '<' | '>=' | '<=' | '==' | '!='
+OPREL			:	'==' | '!='
+				;
+
+
+OPRELNUM		: 	'>' | '<' | '>=' | '<='
 				;
 
 

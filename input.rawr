@@ -1,20 +1,11 @@
 start:
 
-	int i;
-	i=2;
+	text i;
+	int j;
+	j=2;
 	
-	if("oi"<i){
-		write("teste");
-	}
-	
-	write(i);
-    
-    for(i=2; i<5; i++){
-    	write(i);
-    }
-    
-    for(i=2; i<5; i=i+1){
-    	write(i);
+    for(i="oi"; i=="oi"; j++){
+    	write(j);
     }
 
 end;
