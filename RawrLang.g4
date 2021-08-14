@@ -76,6 +76,15 @@ grammar RawrLang;
 		}
 	}
 	
+	public void isBoolean(String id){
+		if (id != null) {
+			int type = ((RawrVariable) symbolTable.get(id)).getType();
+			if(type != 3){
+				throw new RawrSemanticException ("Variable "+id+" is not a boolean");
+			}
+		}
+	}
+	
 	public boolean variableValidateRead(String id){
 		
 		for(AbstractCommand command: curThread) {
@@ -212,7 +221,7 @@ cmdloop1		: 	'while'
 						{
 							variableValidateType(_exprId, 2);
 						}
-						BOOLEAN
+						|BOOLEAN
 						{
 							variableValidateType(_exprId, 3);
 						}
@@ -222,11 +231,21 @@ cmdloop1		: 	'while'
 						{ 
 			  				_exprRepetition = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 			  			}
-						|(OPREL
+						((OPREL
+						|OPRELNUM
 						{
-							_exprRepetition += _input.LT(-1).getText();					
-			  				_exprContent = "";
+							isNumber(_exprId);
 						}
+						|OPRELBOOL
+						{
+							isBoolean(_exprId);
+						
+						}
+						)
+						{ 
+			  				_exprDecision += _input.LT(-1).getText();
+			  				_exprContent = "";
+			  			}
 						(ID 
 						{
 					 		if (!variableValidateRead(_input.LT(-1).getText())){
@@ -243,7 +262,7 @@ cmdloop1		: 	'while'
 						{
 							variableValidateType(_exprId, 2);
 						}
-						BOOLEAN
+						|BOOLEAN
 						{
 							variableValidateType(_exprId, 3);
 						}
@@ -255,7 +274,7 @@ cmdloop1		: 	'while'
 							_exprRepetition += _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 						}
 						
-						)
+						)?
 						FP
 						ACH
 						{
@@ -307,15 +326,31 @@ cmdloop2		: 	'do'
 					 	{
 							variableValidateType(_exprId, 2);
 						}
+						|BOOLEAN
+						{
+							variableValidateType(_exprId, 3);
+						}
+						|FALSE
+						|TRUE
 						| expr)
 					 	{ 
 			  				_exprRepetition = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 			  			}
-					 	OPREL
-					 	{
-					 		_exprRepetition += _input.LT(-1).getText();
-					 		_exprContent = "";
-					 	}
+					 	((OPREL
+						|OPRELNUM
+						{
+							isNumber(_exprId);
+						}
+						|OPRELBOOL
+						{
+							isBoolean(_exprId);
+						
+						}
+						)
+						{ 
+			  				_exprDecision += _input.LT(-1).getText();
+			  				_exprContent = "";
+			  			}
 					 	(ID 
 					 	{
 					 		if (!variableValidateRead(_input.LT(-1).getText())){
@@ -332,11 +367,18 @@ cmdloop2		: 	'do'
 						{
 							variableValidateType(_exprId, 2);
 						}
+						|BOOLEAN
+						{
+							variableValidateType(_exprId, 3);
+						}
+						|FALSE
+						|TRUE
 						|expr
 					 	)
 						{ 
 			  				_exprRepetition += _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 			  			}
+			  			)?
 					 	FP
 					 	SC?
 					 	{
@@ -376,11 +418,16 @@ cmdloop3		: 	'for'
 						{ 
 			  				_exprRepetition += _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 			  			}
-						OPREL
+						(OPREL
+						|OPRELNUM
 						{
-							_exprRepetition += _input.LT(-1).getText();
-							_exprContent = "";
+							isNumber(_exprId);
 						}
+						)
+						{ 
+			  				_exprDecision += _input.LT(-1).getText();
+			  				_exprContent = "";
+			  			}
 						(ID 
 						{
 							if (!variableValidateRead(_input.LT(-1).getText())){
@@ -401,6 +448,7 @@ cmdloop3		: 	'for'
 						{
 							_exprRepetition += _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 						}
+						
 						SC
 						{
 							_exprRepetition += _input.LT(-1).getText();
@@ -410,6 +458,7 @@ cmdloop3		: 	'for'
 						{
 							_exprRepetition += _exprTemp;
 						}
+						
 						FP
 						ACH
 						{
@@ -555,19 +604,21 @@ cmd_conditional	:	'if'
 			  			{ 
 			  				_exprDecision = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 			  			}
-			  			|((OPREL
-			  			{ 
-			  				
+			  			((OPREL
+						|OPRELNUM
+						{
+							isNumber(_exprId);
+						}
+						|OPRELBOOL
+						{
+							isBoolean(_exprId);
+						
+						}
+						)
+						{ 
 			  				_exprDecision += _input.LT(-1).getText();
 			  				_exprContent = "";
 			  			}
-			  			|OPRELBOOL 
-			  			{ 
-			  				
-			  				_exprDecision += _input.LT(-1).getText();
-			  				_exprContent = "";
-			  			}
-			  			)
 			  			(ID 
 			  			{
 			  				if (!variableValidateRead(_input.LT(-1).getText())){
@@ -597,6 +648,8 @@ cmd_conditional	:	'if'
 			  			{ 
 			  				_exprDecision += _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 			  			}
+			  		
+			  			)?
 			  			FP 
 			  			ACH 
 			  			{ 
@@ -609,7 +662,7 @@ cmd_conditional	:	'if'
 			  				listTrue = stack.pop();
 			  			}
 		
-			  		)
+			  		
 			  		('else if' 
 			  			AP 
 			  			{
@@ -653,19 +706,21 @@ cmd_conditional	:	'if'
 				  			{ 
 				  				_exprDecision = _exprContent == "" ? _input.LT(-1).getText() : _exprContent;
 				  			}
-				  			|((OPREL
-			  				{ 
-			  				
+				  			((OPREL
+							|OPRELNUM
+							{
+								isNumber(_exprId);
+							}
+							|OPRELBOOL
+							{
+								isBoolean(_exprId);
+						
+							}
+							)
+							{ 
 			  					_exprDecision += _input.LT(-1).getText();
 			  					_exprContent = "";
 			  				}
-			  				|OPRELBOOL 
-			  				{ 
-			  				
-			  					_exprDecision += _input.LT(-1).getText();
-			  					_exprContent = "";
-			  				}
-			  				)
 				  			(ID 
 				  			{
 				  				if (!variableValidateRead(_input.LT(-1).getText())){
@@ -697,7 +752,7 @@ cmd_conditional	:	'if'
 				  			}
 				  			)
 				  			
-				  		)
+				  		)?
 			  			FP 
 		   	    		ACH 
 		   	    		{
@@ -806,8 +861,13 @@ FCH 			: 	'}'
 				;
 
 
-OPREL			: 	'>' | '<' | '>=' | '<=' | '==' | '!='
+OPREL			:	'==' | '!='
 				;
+
+
+OPRELNUM		: 	'>' | '<' | '>=' | '<='
+				;
+
 
 OPRELBOOL		: 	'&&' | '||'
 				;
